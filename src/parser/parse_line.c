@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 23:07:07 by acastilh          #+#    #+#             */
-/*   Updated: 2024/03/28 00:00:30 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/03 18:18:22 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,146 +14,141 @@
 
 void	parse_line(char *line, t_config *config)
 {
-	line = get_next_line_trim(line);
-	if (ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
-		|| ft_strncmp(line, "WE ", 3) == 0 || ft_strncmp(line, "EA ", 3) == 0)
+	char	*trimmed_line;
+
+	// Removemos espaços em branco do início e final da linha
+	trimmed_line = ft_strtrim(line, " \t\n");
+	if (!trimmed_line)
 	{
-		if (!parse_texture_line(line, &config->textures))
+		config->parse_error = ERROR_MEMORY;
+		return ;
+	}
+	if (ft_strncmp(trimmed_line, "NO ", 3) == 0 || ft_strncmp(trimmed_line,
+			"SO ", 3) == 0 || ft_strncmp(trimmed_line, "WE ", 3) == 0
+		|| ft_strncmp(trimmed_line, "EA ", 3) == 0)
+	{
+		if (!parse_texture_line(trimmed_line, &config->textures))
 		{
 			config->parse_error = ERROR_TEXTURE;
-			ft_printf("Error: Failed to parse texture line: %s\n", line);
 		}
 	}
-	else if (ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
+	else if (ft_strncmp(trimmed_line, "F ", 2) == 0 || ft_strncmp(trimmed_line,
+			"C ", 2) == 0)
 	{
-		if (!parse_color_line(line, &config->colors))
+		if (!parse_color_line(trimmed_line, &config->colors))
 		{
 			config->parse_error = ERROR_COLOR;
-			ft_printf("Error: Failed to parse color line: %s\n", line);
 		}
 	}
-	else
+	else if (!parse_map_line(trimmed_line, &config->map))
 	{
-		if (!parse_map_line(line, &config->map))
-		{
-			config->parse_error = ERROR_MAP;
-			ft_printf("Error: Failed to parse map line: %s\n", line);
-		}
+		config->parse_error = ERROR_MAP;
 	}
+	free(trimmed_line);
 }
 
 bool	parse_texture_line(char *line, t_texture *textures)
 {
-	const char *path_start = ft_strchr(line, ' '); // Encontra o primeiro espaço
+	const char	*path_start;
+
+	path_start = ft_strchr(line, ' ');
 	if (!path_start)
-		return (false); // Retorna falso se não encontrar um espaço
-	path_start++;       // Avança para começar do caminho, depois do espaço
-	// Checa o identificador e copia o caminho para a estrutura apropriada
+		return (false);
+	path_start = ft_strtrim(path_start, " \t");
+		// Remover espaços antes do caminho.
+	if (!path_start)
+		return (false);
 	if (ft_strncmp(line, "NO ", 3) == 0)
-	{
 		ft_strlcpy(textures->north, path_start, TEX_PATH_LEN);
-	}
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-	{
 		ft_strlcpy(textures->south, path_start, TEX_PATH_LEN);
-	}
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-	{
 		ft_strlcpy(textures->west, path_start, TEX_PATH_LEN);
-	}
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-	{
 		ft_strlcpy(textures->east, path_start, TEX_PATH_LEN);
-	}
 	else
-	{
-		return (false); // Retorna falso se o identificador não corresponder
-	}
-	return (true); // Retorna verdadeiro se a linha for analisada com sucesso
+		return (false);
+	return (true);
 }
 
 bool	parse_color_line(char *line, t_color *colors)
 {
 	char	**rgb;
-	int		color;
 
 	int r, g, b;
-	char identifier = line[0]; // 'F' ou 'C'
-	rgb = ft_split(line, ',');
-	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
-	{
+	char *trimmed = ft_strtrim(line + 1, " \t");
+		// Pular o identificador e trimar.
+	if (!trimmed)
+		return (false);
+	rgb = ft_split(trimmed, ',');
+	free(trimmed); // Liberar memória de trimmed após uso.
+	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || rgb[3])
+	{                      
+		// Certificar-se de que existem exatamente três componentes.
 		ft_free_split(rgb);
+			// Supondo que essa função libera todos os elementos de rgb.
 		return (false);
 	}
 	r = ft_atoi(rgb[0]);
 	g = ft_atoi(rgb[1]);
 	b = ft_atoi(rgb[2]);
 	ft_free_split(rgb);
-	// Verifica se os valores RGB são válidos
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
-	{
-		return (false); // Retorna falso se qualquer valor RGB for inválido
-	}
-	// Calcula o valor hexadecimal da cor
-	color = (r << 16) | (g << 8) | b;
-	// Armazena o valor hexadecimal na estrutura apropriada
-	if (identifier == 'F')
-	{
-		colors->floor = color;
-	}
-	else if (identifier == 'C')
-	{
-		colors->ceiling = color;
-	}
-	else
-	{
-		return (false); // Retorna falso se o identificador não for 'F' nem 'C'
-	}
-	return (true); // Retorna verdadeiro se a linha for analisada com sucesso
+		return (false);
+	colors->floor = (line[0] == 'F') ? (r << 16 | g << 8 | b) : colors->floor;
+	colors->ceiling = (line[0] == 'C') ? (r << 16 | g << 8 | b) : colors->ceiling;
+	return (true);
 }
 
-bool	parse_map_line(char *line, t_map *map)
-{
-	char	**new_grid;
-	int		line_length;
+bool parse_map_line(char *line, t_map *map) {
+    char **new_grid;
+    int i = 0;
 
-	int new_height = map->height + 1;
-    new_grid = (char **)malloc(sizeof(char *) * (new_height + 1));
-	if (!new_grid)
-	{
-		return (false); // Retorna falso se falhar a alocação de memória
-	}
-	// Copia as linhas existentes para o novo array
-	for (int i = 0; i < map->height; i++) // mudar para while 
-	{
-		new_grid[i] = map->grid[i];
-	}
-	// Tenta duplicar a nova linha para o novo array
-	new_grid[map->height] = ft_strdup(line);
-	if (!new_grid[map->height])
-	{ 
-		while (--i >= 0)
-		{
-			free(new_grid[i]);
-		}
-		free(new_grid);
-		return (false);
-	}
-	// Define o novo final do array
-	new_grid[new_height] = NULL;
-	// Libera o antigo array de linhas, se não for nulo
-	if (map->grid != NULL)
-	{
-		free(map->grid);
-	}
-	// Atualiza o array de linhas do mapa e sua altura
-	map->grid = new_grid;
-	map->height = new_height;
-	// Atualiza a largura do mapa se necessário
-	line_length = ft_strlen(line);
-	if (line_length > map->width)
-	{
-		map->width = line_length;
-	}
-	return (true); // Retorna verdadeiro se a linha for adicionada com sucesso
+    // Alocar espaço para o novo grid, incluindo a nova linha e um espaço para NULL
+    new_grid = (char **)malloc(sizeof(char *) * (map->height + 2));
+    if (!new_grid) {
+        return (false); // Falha na alocação de memória
+    }
+
+    // Copiar as linhas existentes para o novo grid
+    while (i < map->height) {
+        new_grid[i] = map->grid[i];
+        i++;
+    }
+
+    // Adicionar a nova linha ao grid
+    new_grid[i] = ft_strdup(line);
+    if (!new_grid[i]) {
+        // Falha ao duplicar a linha, limpar a memória alocada
+        i--; // Decrementar i para começar a liberar a partir do último item válido
+        while (i >= 0) {
+            free(new_grid[i]);
+            i--;
+        }
+        free(new_grid);
+        return (false);
+    }
+
+    // Marcar o fim do novo grid
+    new_grid[map->height + 1] = NULL;
+
+    // Liberar o grid antigo se ele existir
+    if (map->grid != NULL) {
+        free(map->grid);
+    }
+
+    // Atualizar o grid do mapa e incrementar a altura
+    map->grid = new_grid;
+    map->height++;
+
+    // Atualizar a largura do mapa se a nova linha for mais larga que as anteriores
+    size_t new_line_length = ft_strlen(line);
+    if (new_line_length > (size_t)map->width) {
+        map->width = (int)new_line_length;
+    } else {
+        // Se a nova linha não é mais larga, mantém a largura atual
+        map->width = map->width;
+    }
+
+    return (true); // Sucesso
 }

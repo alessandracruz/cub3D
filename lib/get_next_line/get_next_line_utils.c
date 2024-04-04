@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 22:07:45 by acastilh          #+#    #+#             */
-/*   Updated: 2024/03/26 18:24:21 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/04 01:07:19 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-const char	*ft_strchr(const char *s, int c)
+const char *ft_strchr(const char *s, int c)
 {
-	while (*s != '\0')
-	{
-		if (*s == (char)c)
-		{
-			return (s);
-		}
-		s++;
-	}
-	if (c == '\0')
-	{
-		return (s);
-	}
-	return (NULL);
+    if (!s) return NULL;
+
+    while (*s != '\0') {
+        if (*s == (char)c) {
+            return (s);
+        }
+        s++;
+    }
+    if (c == '\0') {
+        return (s);
+    }
+    return (NULL);
 }
+
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

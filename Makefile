@@ -6,13 +6,13 @@
 #    By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/24 20:54:25 by acastilh          #+#    #+#              #
-#    Updated: 2024/03/27 23:00:03 by acastilh         ###   ########.fr        #
+#    Updated: 2024/04/04 01:07:56 by acastilh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(MLX_DIR) -I$(LIBFT_DIR) -I$(GNL_DIR) -DBUFFER_SIZE=32
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(MLX_DIR) -I$(LIBFT_DIR) -I$(GNL_DIR)
 LIBS = -L$(MLX_DIR) -lmlx -L$(LIBFT_DIR) -lft -L/usr/lib -lXext -lX11 -lm -lz
 
 SRC_DIR = src
