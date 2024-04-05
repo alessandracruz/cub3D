@@ -6,45 +6,54 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 23:07:07 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/03 18:18:22 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/05 00:22:31 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	parse_line(char *line, t_config *config)
-{
-	char	*trimmed_line;
+void parse_line(char *line, t_config *config) {
+    char *trimmed_line = ft_strtrim(line, " \t\n");
+    if (!trimmed_line) {
+        config->parse_error = ERROR_MEMORY;
+        return;
+    }
+	ft_printf("Before processing map line: Textures: %s, Colors: %s, Map Start: %s\n",
+          config->textures_loaded ? "Loaded" : "Not Loaded",
+          config->colors_loaded ? "Loaded" : "Not Loaded",
+          config->is_map_start ? "Yes" : "No");
 
-	// Removemos espaços em branco do início e final da linha
-	trimmed_line = ft_strtrim(line, " \t\n");
-	if (!trimmed_line)
+    // Corrigindo a chamada de ft_printf
+    ft_printf("Processing line: '%s'. Map start: %s. Textures loaded: %s. Colors loaded: %s\n",
+              trimmed_line,
+              config->is_map_start ? "Yes" : "No",
+              config->textures_loaded ? "Yes" : "No",
+              config->colors_loaded ? "Yes" : "No");
+
+    if (!config->is_map_start) {
+        process_configuration_line(trimmed_line, config);
+        if (config->textures_loaded && config->colors_loaded) {
+            config->is_map_start = true;
+            ft_printf("Map processing starts now.\n");
+        }
+    } else {
+        if (!parse_map_line(trimmed_line, &config->map, config)) {
+            config->parse_error = ERROR_MAP;
+        }
+    }
+
+    free(trimmed_line);
+}
+
+
+void	update_loaded_flags(t_config *config)
+{
+	config->textures_loaded = check_textures_loaded(&config->textures);
+	config->colors_loaded = check_colors_loaded(&config->colors);
+	if (config->textures_loaded && config->colors_loaded)
 	{
-		config->parse_error = ERROR_MEMORY;
-		return ;
+		config->is_map_start = true;
 	}
-	if (ft_strncmp(trimmed_line, "NO ", 3) == 0 || ft_strncmp(trimmed_line,
-			"SO ", 3) == 0 || ft_strncmp(trimmed_line, "WE ", 3) == 0
-		|| ft_strncmp(trimmed_line, "EA ", 3) == 0)
-	{
-		if (!parse_texture_line(trimmed_line, &config->textures))
-		{
-			config->parse_error = ERROR_TEXTURE;
-		}
-	}
-	else if (ft_strncmp(trimmed_line, "F ", 2) == 0 || ft_strncmp(trimmed_line,
-			"C ", 2) == 0)
-	{
-		if (!parse_color_line(trimmed_line, &config->colors))
-		{
-			config->parse_error = ERROR_COLOR;
-		}
-	}
-	else if (!parse_map_line(trimmed_line, &config->map))
-	{
-		config->parse_error = ERROR_MAP;
-	}
-	free(trimmed_line);
 }
 
 bool	parse_texture_line(char *line, t_texture *textures)
@@ -55,7 +64,6 @@ bool	parse_texture_line(char *line, t_texture *textures)
 	if (!path_start)
 		return (false);
 	path_start = ft_strtrim(path_start, " \t");
-		// Remover espaços antes do caminho.
 	if (!path_start)
 		return (false);
 	if (ft_strncmp(line, "NO ", 3) == 0)
@@ -74,19 +82,17 @@ bool	parse_texture_line(char *line, t_texture *textures)
 bool	parse_color_line(char *line, t_color *colors)
 {
 	char	**rgb;
+	char	*trimmed;
 
 	int r, g, b;
-	char *trimmed = ft_strtrim(line + 1, " \t");
-		// Pular o identificador e trimar.
+	trimmed = ft_strtrim(line + 1, " \t");
 	if (!trimmed)
 		return (false);
 	rgb = ft_split(trimmed, ',');
-	free(trimmed); // Liberar memória de trimmed após uso.
+	free(trimmed);
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || rgb[3])
-	{                      
-		// Certificar-se de que existem exatamente três componentes.
+	{
 		ft_free_split(rgb);
-			// Supondo que essa função libera todos os elementos de rgb.
 		return (false);
 	}
 	r = ft_atoi(rgb[0]);
@@ -100,55 +106,58 @@ bool	parse_color_line(char *line, t_color *colors)
 	return (true);
 }
 
-bool parse_map_line(char *line, t_map *map) {
-    char **new_grid;
-    int i = 0;
+bool	parse_map_line(char *line, t_map *map, t_config *config)
+{
+	char	**new_grid;
+	int		i;
+	size_t	new_line_length;
+	int		j;
 
-    // Alocar espaço para o novo grid, incluindo a nova linha e um espaço para NULL
-    new_grid = (char **)malloc(sizeof(char *) * (map->height + 2));
-    if (!new_grid) {
-        return (false); // Falha na alocação de memória
-    }
-
-    // Copiar as linhas existentes para o novo grid
-    while (i < map->height) {
-        new_grid[i] = map->grid[i];
-        i++;
-    }
-
-    // Adicionar a nova linha ao grid
-    new_grid[i] = ft_strdup(line);
-    if (!new_grid[i]) {
-        // Falha ao duplicar a linha, limpar a memória alocada
-        i--; // Decrementar i para começar a liberar a partir do último item válido
-        while (i >= 0) {
-            free(new_grid[i]);
-            i--;
-        }
-        free(new_grid);
-        return (false);
-    }
-
-    // Marcar o fim do novo grid
-    new_grid[map->height + 1] = NULL;
-
-    // Liberar o grid antigo se ele existir
-    if (map->grid != NULL) {
-        free(map->grid);
-    }
-
-    // Atualizar o grid do mapa e incrementar a altura
-    map->grid = new_grid;
-    map->height++;
-
-    // Atualizar a largura do mapa se a nova linha for mais larga que as anteriores
-    size_t new_line_length = ft_strlen(line);
-    if (new_line_length > (size_t)map->width) {
-        map->width = (int)new_line_length;
-    } else {
-        // Se a nova linha não é mais larga, mantém a largura atual
-        map->width = map->width;
-    }
-
-    return (true); // Sucesso
+	new_grid = (char **)malloc(sizeof(char *) * (map->height + 2));
+	if (!new_grid)
+	{
+		return (false);
+	}
+	i = 0;
+	while (i < map->height)
+	{
+		new_grid[i] = map->grid[i];
+		i++;
+	}
+	new_grid[i] = ft_strdup(line);
+	if (!new_grid[i])
+	{
+		i--;
+		while (i >= 0)
+		{
+			free(new_grid[i]);
+			i--;
+		}
+		free(new_grid);
+		return (false);
+	}
+	j = 0;
+	while (line[j])
+	{
+		if (line[j] == 'N' || line[j] == 'S' || line[j] == 'E'
+			|| line[j] == 'W')
+		{
+			ft_printf("Player starting position detected: %c at [%d, %d]\n",
+				line[j], map->height, j);
+			config->player.x = j; // Ajuste conforme seu modelo
+			config->player.y = map->height;
+			// Adicionar mais configurações conforme necessário
+		}
+		j++;
+	}
+	new_grid[map->height + 1] = NULL;
+	if (map->grid != NULL)
+	{
+		free(map->grid);
+	}
+	map->grid = new_grid;
+	map->height++;
+	new_line_length = ft_strlen(line);
+	map->width = (new_line_length > (size_t)map->width) ? (int)new_line_length : map->width;
+	return (true);
 }

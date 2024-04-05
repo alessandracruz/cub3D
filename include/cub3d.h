@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/03 19:01:02 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/04 23:43:34 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,12 @@ typedef enum e_parse_error
 	ERROR_TEXTURE,
 	ERROR_COLOR,
 	ERROR_MAP,
-	ERROR_MEMORY
+	ERROR_MEMORY,
+	ERROR_INVALID_CHAR,
+    ERROR_MISSING_PLAYER,
+    ERROR_OPEN_WALL,
+    ERROR_MULTIPLE_PLAYERS,
+	ERROR_MAP_EMPTY,
 }			t_parse_error;
 
 typedef struct s_config
@@ -80,6 +85,9 @@ typedef struct s_config
 	t_map map;                 // Estrutura para o mapa
 	t_player player;           // Estrutura para o jogador
 	t_parse_error parse_error; // Estrutura de tratamento de erros geral
+	bool is_map_start; 		   // Flag para indicar o início do processamento do mapa
+	bool textures_loaded;      // Indica se todas as texturas foram carregadas
+    bool colors_loaded;        // Indica se as cores foram definidas
 }			t_config;
 
 /****** PARSER ******/
@@ -93,12 +101,40 @@ void		print_parse_error(t_parse_error error_code, char *line);
 
 bool		parse_texture_line(char *line, t_texture *textures);
 bool		parse_color_line(char *line, t_color *colors);
-bool		parse_map_line(char *line, t_map *map);
+bool		parse_map_line(char *line, t_map *map, t_config *config);
 void		parse_line(char *line, t_config *config);
+void		update_loaded_flags(t_config *config);
+void		process_configuration_line(char *trimmed_line, t_config *config);
+
+// VALIDATE_MAP
+
+bool		validate_map(t_map *map, t_config *config);
+bool		validate_map_chars(t_map *map, t_config *config);
+bool		validate_player_start(t_map *map, t_config *config);
+bool		validate_walls_closed(t_map *map, t_config *config);
+
+/****** GAME ******/
+
+// INITIALIZATION
+
+void		initialize_player_direction(t_player *player, char orientation);
+void		set_player_position(t_config *config, int x, int y, char orientation);
 
 /****** UTILS ******/
 
+// GET_NEXT_LINE_TRIM
+
 char		*get_next_line_trim(char *line);
+
+// COLOR_UTILS
+
+bool		check_colors_loaded(t_color *colors);
+bool		validate_color(int color);
+
+// TEXTURE_UTILS
+
+bool		check_textures_loaded(t_texture *textures);
+bool		validate_texture(char *path);
 
 #endif
 
