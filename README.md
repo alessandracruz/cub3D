@@ -24,3 +24,8 @@
 
 5. *Loop de Jogo:*
    - Integração dos componentes acima em um loop contínuo de jogo, onde a entrada do usuário é processada, o estado do jogo é atualizado, e a nova visão 3D é renderizada e exibida ao usuário.
+  
+5. *Fluxograma do Projeto:*
+   
+![Cub3D](https://github.com/alessandracruz/Imagens/blob/main/Cub3D.png)
+
