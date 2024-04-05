@@ -1,0 +1,9 @@
+Refatora processamento de linhas e adiciona logs de diagnóstico
+
+Este commit implementa várias melhorias no processamento de linhas de configuração e do mapa, além de adicionar logs detalhados para facilitar a diagnóstico de problemas.
+
+Alterações principais:
+- Modifica a função parse_line para tratar corretamente a transição entre o processamento de linhas de configuração e de mapa, assegurando que todas as linhas de configuração sejam processadas antes do início do mapa.
+- Adiciona verificações robustas em validate_map_chars para garantir que caracteres específicos de configuração não sejam erroneamente interpretados como parte do mapa.
+- Introduz logs de diagnóstico em pontos-chave do código, especialmente antes e depois da transição de estado de configuração para mapa, para melhorar a visibilidade do fluxo de processamento.
+- Corrige validações para lidar com casos de espaços vazios e caracteres de configuração após o início do processamento do mapa.
