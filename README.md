@@ -27,5 +27,5 @@
   
 5. *Fluxograma do Projeto:*
    
-![Cub3D](https://github.com/alessandracruz/Imagens/blob/main/Cub3D.png)
+![Cub3D](https://github.com/alessandracruz/Imagens/blob/main/Cub3Dv1.png)
 
