@@ -18,3 +18,21 @@ Sigo enfrentando problemas para a configuração do projeto cub3D no WSL2, dando
  Os aplicativos gráficos como o xeyes e clock funcionam normalmente, mas quando
  rodo a cub3D dá um erro relacionado a extensão MIT-SHM e à sincronização de 
  múltiplas threads. Pedi ajuda para resolver.
+
+Por fim, pedi ao meu amigo para rodar o código na máquina dele e o erro que 
+voltou foi outro:
+
+'double free ou corruption (out)'
+'Aborted'
+
+O que sinalizou problemas com o código e não necessariamente na interação do
+servidor X do MobaXterm com o ambiente WSL2. 
+
+A mensagem de erro "double free or corruption (out)" indica que há um problema 
+no gerenciamento de memória do programa. Acontece geralmente quando o código 
+tenta liberar a mesma área de memória mais de uma vez ou se há uma corrupção 
+na estrutura de dados que gerencia a alocação de memória.
+
+Para resolver, rodei o Valgrind, ajudando a detectar onde estavam ocorrendo 
+desalocações duplas e outras questões de memória.
+
