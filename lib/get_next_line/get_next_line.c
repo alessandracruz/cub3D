@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 22:06:50 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/03 19:57:04 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:42:21 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,9 @@ char	*read_aux_str(int fd, char *aux_str)
 			return (NULL);
 		}
 		buffer[reader_bytes] = '\0';
-		if (aux_str == NULL)
-			aux_str = ft_strdup(buffer);
-		else
-		{
-			char *temp = ft_strjoin(aux_str, buffer);
-			free(aux_str);
-			aux_str = temp;
-		}
-		if (ft_strchr(aux_str, '\n'))
-			break ;
-		aux_str = ft_strjoin(aux_str, buffer);
+		char *temp = ft_strjoin(aux_str, buffer);
+		free(aux_str);
+		aux_str = temp;
 	}
 	free(buffer);
 	return (aux_str);

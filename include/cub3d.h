@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/08 23:38:41 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:54:04 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ bool	parse_config_file(char *file_path, t_data *data);
 // MAP_UTILS
 
 int		count_map_lines(const char *file_path);
+void	free_map_grid(char ***grid, int line_count);
+bool	fill_map_grid(int fd, char ***grid, int line_count);
 bool	process_map(t_data *data, const char *file_path);
 
 // TEXTURE_UTILS

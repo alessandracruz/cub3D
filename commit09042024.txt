@@ -1,0 +1,23 @@
+Refinamento de memória com Valgrind e ajustes na get_next_line.
+
+Este commit inclui várias correções e melhorias de gerenciamento de memória, 
+identificadas com a ajuda do Valgrind. 
+
+As alterações específicas incluem:
+
+- Ajustes na função get_next_line para evitar a alocação dupla de strings, 
+otimizando a gestão de memória. A ft_strjoin estava sendo chamada duas vezes 
+sem necessidade.
+
+- Correções em potenciais vazamentos de memória, onde os recursos agora são 
+devidamente liberados em todo o fluxo do programa.
+
+- Refatoração de funções para atender aos padrões da Nomrinette e manter o 
+código limpo e eficiente.
+
+Comando utilizado para diagnóstico com Valgrind:
+
+`valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./cub3D ./assets/maps/test.cub`
+
+Estas melhorias resultaram na redução significativa de erros reportados pelo 
+Valgrind e um gerenciamento de memória mais eficiente.
