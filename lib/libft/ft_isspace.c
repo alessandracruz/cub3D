@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_trim.c                               :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 23:48:55 by acastilh          #+#    #+#             */
-/*   Updated: 2024/03/27 23:49:15 by acastilh         ###   ########.fr       */
+/*   Created: 2024/04/08 18:42:31 by acastilh          #+#    #+#             */
+/*   Updated: 2024/04/08 18:42:38 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "libft.h"
 
-char	*get_next_line_trim(char *line)
+int ft_isspace(int c)
 {
-	while (*line == ' ' || *line == '\t')
-	{
-		line++;
-	}
-	return (line);
+    return (c == ' ' || c == '\t' || c == '\n' ||
+            c == '\r' || c == '\f' || c == '\v');
 }

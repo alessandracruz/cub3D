@@ -1,0 +1,9 @@
+Refined parser and utility files for cub3D project
+
+Este commit implementa várias melhorias no processamento de linhas de configuração e do mapa, além de adicionar um arquivo log.c para ajudar na análise de problemas durante o desenvolvimento do projeto.
+
+Alterações principais:
+- Aprimoramento dos arquivos de parser, garantindo uma análise eficiente das linhas de configuração e de mapas de diversos tamanhos.
+- Cria e refina arquivos dedicados a validações, tratamento de erros e manipulação de strings.
+
+Sigo enfrentando problemas para a configuração do projeto cub3D no WSL2, dando problemas na interação efetiva com o servidor X via MobaXterm. Mesmo corrigindo a variável DISPLAY para assegurar a comunicação com o servidor X. Os aplicativos gráficos como o xeyes e clock funcionam normalmente, mas quando rodo a cub3D dá um erro relacionado a extensão MIT-SHM e à sincronização de múltiplas threads. Pedi ajuda para resolver.

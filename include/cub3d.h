@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/04 23:43:34 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/08 23:38:41 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,82 @@
 # include <string.h>
 # include <unistd.h>
 
+# define TEX_PATH_LEN 512
+# define BUFFER_SIZE 32
+# define WIDTH 640
+# define HEIGHT 480
+#define ERR_MLX_INIT_FAILED 1
+#define ERR_WIN_CREATION_FAILED 2
+#define ERR_IMG_CREATION_FAILED 3
+#define ERR_MAP_PARSING_FAILED 4
+// Adicione mais conforme necessário
+
+typedef struct s_map {
+    char north[TEX_PATH_LEN]; // Caminho para a textura do norte
+    char south[TEX_PATH_LEN]; // Caminho para a textura do sul
+    char west[TEX_PATH_LEN];  // Caminho para a textura do oeste
+    char east[TEX_PATH_LEN];  // Caminho para a textura do leste
+    int floor;   // Cor do chão em formato hexadecimal 0xRRGGBB
+    int ceiling; // Cor do teto em formato hexadecimal 0xRRGGBB
+    char **grid; // Matriz de caracteres representando o mapa
+    int line_count; // Contagem de linhas do mapa
+} t_map;
+
+typedef struct s_data {
+    void *mlx;
+    void *win;
+    void *img;
+    char *addr;
+    int bits_per_pixel;
+    int line_length;
+    int endian;
+    char *name;
+    t_map map; // Adicionado aqui
+} t_data;
+
+/***** PARSER ******/
+
+// COLOR_UTILS
+
+bool	process_color_line(char *line, t_data *data);
+int		convert_rgb_to_hex(const char *rgb);
+
+// MAP_PARSER
+
+void	start(t_data *data);
+bool	parse_config_file(char *file_path, t_data *data);
+
+// MAP_UTILS
+
+int		count_map_lines(const char *file_path);
+bool	process_map(t_data *data, const char *file_path);
+
+// TEXTURE_UTILS
+
+bool	process_texture_line(char *line, t_data *data);
+
+/***** UTILS *****/
+
+void	handle_error(int error_code, t_data *data);
+char	*trim_spaces(char *str);
+bool	is_valid_config_line(const char *line);
+bool	is_valid_map_char(char c);
+bool	is_map_char(char c);
+bool	is_map_line(const char *line);
+void	log_message(const char *format, ...);
+
+
+// MAIN
+
+void	windows_builder(t_data *data);
+void	clean_up(t_data *data);
+int		close_hook(t_data *data);
+int		main(int argc, char **argv);
+
+#endif
+
+
+/*
 # define NAME "cub3D"
 # define WIDTH 1280
 # define HEIGHT 720
@@ -76,7 +152,8 @@ typedef enum e_parse_error
     ERROR_OPEN_WALL,
     ERROR_MULTIPLE_PLAYERS,
 	ERROR_MAP_EMPTY,
-}			t_parse_error;
+}		t_parse_error;
+
 
 typedef struct s_config
 {
@@ -88,9 +165,10 @@ typedef struct s_config
 	bool is_map_start; 		   // Flag para indicar o início do processamento do mapa
 	bool textures_loaded;      // Indica se todas as texturas foram carregadas
     bool colors_loaded;        // Indica se as cores foram definidas
+	bool configurations_processed;
 }			t_config;
 
-/****** PARSER ******/
+****** PARSER ******
 
 // MAP_CONFIG_PARSER
 
@@ -113,14 +191,14 @@ bool		validate_map_chars(t_map *map, t_config *config);
 bool		validate_player_start(t_map *map, t_config *config);
 bool		validate_walls_closed(t_map *map, t_config *config);
 
-/****** GAME ******/
+****** GAME ******
 
 // INITIALIZATION
 
 void		initialize_player_direction(t_player *player, char orientation);
 void		set_player_position(t_config *config, int x, int y, char orientation);
 
-/****** UTILS ******/
+****** UTILS ******
 
 // GET_NEXT_LINE_TRIM
 
@@ -137,107 +215,4 @@ bool		check_textures_loaded(t_texture *textures);
 bool		validate_texture(char *path);
 
 #endif
-
-/*
-// Estrutura para representar o mapa
-typedef struct s_map
-{
-	char	**array;
-	int		width;
-	int		height;
-}			t_map;
-
-// Incluído no arquivo cub3d.h
-
-typedef struct s_img
-{
-	int		height;
-	int		width;
-	void    *img_ptr;      // Ponteiro para a imagem da textura
-	char    *addr;         // Endereço do pixel da imagem
-	int     bits_per_pixel; // Quantidade de bits por pixel
-	int     line_length;    // Comprimento de linha da imagem
-	int     endian;         // Formato endian da imagem
-}			t_img;
-
-typedef struct s_texture
-{
-	t_img   *north; // Textura do lado norte
-	t_img   *south; // Textura do lado sul
-	t_img   *east;  // Textura do lado leste
-	t_img   *west;  // Textura do lado oeste
-	int		floor;
-	int		ceiling;
-}			t_texture;
-
-typedef struct s_player
-{
-	double posX, posY;  // Posição do jogador
-	double dirX, dirY;  // Direção do jogador
-	double planeX, planeY; // Plano da câmera do jogador, para cálculo de FOV
-	double moveSpeed;   // Velocidade de movimento
-	double rotSpeed;    // Velocidade de rotação
-}			t_player;
-
-typedef struct s_game
-{
-	void        *mlx;       // Ponteiro para a instância MLX
-	void        *win;       // Ponteiro para a janela
-	t_map       map;        // Mapa do jogo
-	t_texture   textures;   // Texturas do jogo
-	t_player    player;     // Jogador
-}			t_game;
-
-
-// Declarações de funções
-
-void		init_player(t_player *player);
-
-// Função para carregar o mapa
-
-// MAIN
-int			main(int argc, char **argv);
-
-***** PARSE_MAPS *****
-
-// COLORS.C
-
-int			check_rgb_range(int r, int g, int b);
-int			convert_rgb_to_int(char **rgb_components);
-void		ft_free_str_array(char **array);
-char		*trim_line(int fd);
-int			parse_floor_ceiling_color(char *line, int *color, char identifier);
-
-// MAP_CONFIG
-
-void		parse_map_config(t_game *game, char *config_path);
-void	parse_map_config(t_game *game, char *config_path)
-
-// MAP_KEYS.C
-
-int			is_valid_key(char *key);
-int			is_duplicate_key(char *key, t_game *game);
-
-// MAP_SIZE.C
-
-void		calculate_map_size(t_map *map, const char *map_file_path);
-
-// MAP_PARSER.C
-
-void		load_texture(t_game *game, char *direction, char *path);
-
-// TEXTURE_MANAGEMENT.C
-
-void		validate_and_load_texture(t_game *game, const char *line);
-
-// TEXTURE_UTILS.C
-
-int	validate_and_load_data(void *mlx_ptr, char *texture_path,
-		t_img **target_texture);
-
-***** START *****
-
-void		load_textures_and_colors(t_game *game);
-void		init_cub(t_game *game);
-void		render_map(t_game *game);
 */

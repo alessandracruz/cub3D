@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 17:26:15 by acastilh          #+#    #+#             */
-/*   Updated: 2024/03/27 23:35:21 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/08 18:42:59 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,6 @@ size_t	ft_putstr(char *str);
 void	ft_putnbr(int n);
 void    ft_free_str_array(char **array);
 void	ft_free_split(char **array);
+int     ft_isspace(int c);
 
 #endif
