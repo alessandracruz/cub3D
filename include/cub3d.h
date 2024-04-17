@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/09 15:54:04 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:55:09 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <unistd.h>
 
 # define TEX_PATH_LEN 512
-# define BUFFER_SIZE 32
 # define WIDTH 640
 # define HEIGHT 480
 #define ERR_MLX_INIT_FAILED 1
