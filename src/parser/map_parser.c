@@ -6,76 +6,64 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:07:56 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/08 22:01:59 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:42:08 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// Implementações dummy para teste.
-
-void	start(t_data *data)
-{
-	data->name = "Cub3D";
-	data->mlx = mlx_init();
-	if (!data->mlx)
-	{
-		ft_printf("Failed to initialize MLX.\n");
-		exit(1); // Ou outra forma de tratamento de erro
-	}
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, data->name);
-	if (!data->win)
-	{
-		ft_printf("Failed to create window.\n");
-		exit(1); // Ou outra forma de tratamento de erro
-	}
-}
-
-bool	parse_config_file(char *file_path, t_data *data)
+bool	parse_config_file(char *file_path, t_data *data, t_error *error)
 {
 	int		fd;
 	char	*line;
-	int		read_status;
+	int		valid_lines;
 
 	fd = open(file_path, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_printf("Error opening file: %s\n", file_path);
+		set_error(error, "Error opening file", ERROR_FILE_OPEN);
 		return (false);
 	}
-	read_status = 1;
-	while (read_status > 0)
+	valid_lines = 0;
+	while ((line = get_next_line(fd)) != NULL)
 	{
-		line = get_next_line(fd);
-		if (!line)
-		{                    // Se get_next_line retornar NULL, significa EOF ou erro.
-			read_status = 0; // Define read_status para 0 para sair do loop.
-			continue ;
-		}
-		if ((line[0] == 'N' || line[0] == 'S' || line[0] == 'W'
-				|| line[0] == 'E') && !process_texture_line(line, data))
+		if (*line != '\0' && process_line(line, data, error, fd))
 		{
-			free(line);
-			close(fd);
-			return (false);
-		}
-		else if ((line[0] == 'F' || line[0] == 'C') && !process_color_line(line,
-				data))
-		{
-			free(line);
-			close(fd);
-			return (false);
-		}
-		else if (!process_map(data, file_path))
-		{
-			free(line);
-			close(fd);
-			return (false);
+			valid_lines++;
 		}
 		free(line);
-			// Libera a memória alocada por get_next_line após processar a linha.
 	}
 	close(fd);
+	if (valid_lines == 0)
+	{
+		set_error(error, "Empty or invalid map", ERROR_EMPTY_MAP);
+		return (false);
+	}
 	return (true);
-		// Retorna true se todo o arquivo foi processado sem encontrar erros.
+}
+
+bool	process_line(char *line, t_data *data, t_error *error, int fd)
+{
+	ft_printf("Processando linha\n");
+	if (!line || *line == '\0')
+		return (true); // Ignora linhas vazias ou NULL
+	// Ignora espaços no início da linha
+	while (*line == ' ' || *line == '\n')
+		line++;
+	if (*line == '\0')
+		return (true); // Se só tinha espaço ou quebra de linha, continua
+	ft_printf("A linha começa com: %c\n", *line); // Para debugar
+	if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
+	{
+		return (process_texture_line(line, data, error));
+	}
+	else if (*line == 'F' || *line == 'C')
+	{
+		return (process_color_line(line, data, error));
+	}
+	else
+	{
+		// Trata como linha de mapa
+		return (process_map_line(data, fd, error));
+	}
 }

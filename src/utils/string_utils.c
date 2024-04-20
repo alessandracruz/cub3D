@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:37:27 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/08 18:43:42 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:46:25 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ char	*trim_spaces(char *str)
 {
 	char	*end;
 
-	// Trim leading space
+	// Remover espaços iniciais
 	while (ft_isspace((unsigned char)*str))
 		str++;
-	if (*str == 0) // All spaces?
+	if (*str == 0) // Todos os espaços?
 		return (str);
-	// Trim trailing space
+	// Remover espaços iniciais
 	end = str + ft_strlen(str) - 1;
 	while (end > str && ft_isspace((unsigned char)*end))
 		end--;
-	// Write new null terminator
+	//  Escrever novo nulo
 	*(end + 1) = 0;
 	return (str);
 }

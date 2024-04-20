@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:36:52 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/08 21:07:22 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:46:41 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ bool	is_valid_config_line(const char *line)
 // Verifica se o caracter é válido para o mapa
 bool	is_valid_map_char(char c)
 {
-	return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'E'
+	return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'O' || c == 'E'
 		|| c == 'W');
 }
 
 bool	is_map_char(char c)
 {
+	ft_printf("linha completa: %c:\n", c);
 	return (ft_strchr("01NSEW ", c) != NULL);
 }
 
@@ -36,10 +37,10 @@ bool	is_map_line(const char *line)
 {
 	if (!line || !*line)
 		return (false);
-	// Linhas de configuração de texturas ou cores não são linhas de mapa.
+	// Linhas de configuração de texturas ou cores não são linhas de mapa
 	if (is_valid_config_line(line))
 		return (false);
-	// Verifica se todos os caracteres são válidos para uma linha de mapa.
+	// Verifica se todos os caracteres são válidos para uma linha de mapa
 	while (*line)
 	{
 		if (!is_map_char(*line))

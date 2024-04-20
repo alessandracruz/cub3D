@@ -6,36 +6,26 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:11:45 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/09 15:55:00 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:39:53 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// Função para contar as linhas do mapa.
-int	count_map_lines(const char *file_path)
+int	count_map_lines(int fd)
 {
-	int		fd;
 	int		line_count;
 	char	*line;
 
-	fd = open(file_path, O_RDONLY);
-	if (fd < 0)
-	{
-		ft_printf("Error opening file: %s\n", file_path);
-		return (-1);
-	}
 	line_count = 0;
 	while ((line = get_next_line(fd)))
 	{
 		if (is_map_line(line))
-			// Supondo que esta função verifica se é uma linha do mapa
 		{
 			line_count++;
 		}
 		free(line);
 	}
-	close(fd);
 	return (line_count);
 }
 
@@ -44,7 +34,7 @@ void	free_map_grid(char ***grid, int line_count)
 	int	j;
 
 	j = 0;
-	while (j < line_count && (*grid)[j] != NULL)
+	while (j < line_count)
 	{
 		free((*grid)[j]);
 		j++;
@@ -53,48 +43,58 @@ void	free_map_grid(char ***grid, int line_count)
 	*grid = NULL;
 }
 
-bool	fill_map_grid(int fd, char ***grid, int line_count)
+bool	fill_map_grid(int fd, char ***grid, int line_count, t_error *error)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	while ((line = get_next_line(fd)) != NULL && i < line_count)
+	while (i < line_count && (line = get_next_line(fd)))
 	{
 		(*grid)[i++] = line;
 	}
-	// Trata o caso de leitura de menos linhas do que o esperado
-	if (i < line_count || (line = get_next_line(fd)) != NULL)
+	if (i < line_count)
 	{
-		if (line != NULL)
-			free(line);         // Se ainda existir linha após atingir o limite, libera a linha.
-		free_map_grid(grid, i); // Libera as linhas já alocadas e o grid
+		set_error(error, "Failed to read all map lines", ERROR_READ);
+		free_map_grid(grid, i);
 		return (false);
 	}
 	return (true);
 }
 
-bool	process_map(t_data *data, const char *file_path)
+bool	process_map_line(t_data *data, int fd, t_error *error)
 {
-	int	fd;
+	char	*line;
+	int		i;
 
-	data->map.line_count = count_map_lines(file_path);
+	data->map.line_count = count_map_lines(fd);
 	if (data->map.line_count <= 0)
+	{
+		set_error(error, "Invalid or empty map", ERROR_EMPTY_MAP);
 		return (false);
+	}
 	data->map.grid = (char **)malloc(sizeof(char *) * data->map.line_count);
-	if (data->map.grid == NULL)
-		return (false);
-	fd = open(file_path, O_RDONLY);
-	if (fd < 0)
+	if (!data->map.grid)
 	{
-		free(data->map.grid);
+		set_error(error, "Failed to allocate memory for map grid",
+			ERROR_MEMORY);
 		return (false);
 	}
-	if (!fill_map_grid(fd, &data->map.grid, data->map.line_count))
+	i = 0;
+	while (i < data->map.line_count)
 	{
-		close(fd);
-		return (false);
+		line = get_next_line(fd);
+		if (line)
+		{
+			data->map.grid[i] = line;
+			i++;
+		}
+		else
+		{
+			free_map_grid(&(data->map.grid), i);
+			set_error(error, "Failed to read all map lines", ERROR_READ);
+			return (false);
+		}
 	}
-	close(fd);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/17 18:55:09 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/18 23:39:18 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,19 @@
 #define ERR_WIN_CREATION_FAILED 2
 #define ERR_IMG_CREATION_FAILED 3
 #define ERR_MAP_PARSING_FAILED 4
+#define ERROR_INVALID_FORMAT 1001
+#define ERROR_CONVERSION_FAILED 1002
+#define ERROR_UNKNOWN_IDENTIFIER 1003
+#define ERROR_MEMORY 1004
+#define ERROR_INVALID_CHAR 1005
+#define ERROR_FILE_OPEN 1006
+#define ERROR_READ 1007        // Error code when reading from a file fails
+#define ERROR_EMPTY_MAP 1008   // Error code when the map is found to be empty or invalid
+#define ERROR_INVALID_PATH 1009  // Error code when a texture path is invalid
+#define ERROR_MULTIPLE_PLAYERS 1010
+#define PARSE_OK 0
+
+
 // Adicione mais conforme necessário
 
 typedef struct s_map {
@@ -43,6 +56,11 @@ typedef struct s_map {
     char **grid; // Matriz de caracteres representando o mapa
     int line_count; // Contagem de linhas do mapa
 } t_map;
+
+typedef struct {
+    char *message;
+    int error_code; // Você pode usar códigos específicos para diferentes tipos de erros
+} t_error;
 
 typedef struct s_data {
     void *mlx;
@@ -60,28 +78,41 @@ typedef struct s_data {
 
 // COLOR_UTILS
 
-bool	process_color_line(char *line, t_data *data);
+bool	process_color_line(char *line, t_data *data, t_error *error);
 int		convert_rgb_to_hex(const char *rgb);
+
+// CONFIG_PARSER
+
+bool	parse_config(const char *filename, t_error *error);
+bool	process_file(FILE *file, t_error *error);
+bool	process_buffer(const char *buffer, t_error *error);
+bool	is_path_or_config_line(const char *line);
+int		skip_to_next_line(const char *line);
+void	set_error(t_error *error, char *message, int code);
+bool	is_valid_character(char c);
 
 // MAP_PARSER
 
-void	start(t_data *data);
-bool	parse_config_file(char *file_path, t_data *data);
+bool	parse_config_file(char *file_path, t_data *data, t_error *error);
+bool	process_line(char *line, t_data *data, t_error *error, int fd);
+void	set_error(t_error *error, char *message, int code);
 
 // MAP_UTILS
 
-int		count_map_lines(const char *file_path);
+int		count_map_lines(int fd);
 void	free_map_grid(char ***grid, int line_count);
-bool	fill_map_grid(int fd, char ***grid, int line_count);
-bool	process_map(t_data *data, const char *file_path);
+bool	fill_map_grid(int fd, char ***grid, int line_count, t_error *error);
+bool	process_map_line(t_data *data, int fd, t_error *error);
+
 
 // TEXTURE_UTILS
 
-bool	process_texture_line(char *line, t_data *data);
+bool	process_texture_line(char *line, t_data *data, t_error *error);
 
 /***** UTILS *****/
 
 void	handle_error(int error_code, t_data *data);
+void	set_error(t_error *error, char *message, int code);
 char	*trim_spaces(char *str);
 bool	is_valid_config_line(const char *line);
 bool	is_valid_map_char(char c);

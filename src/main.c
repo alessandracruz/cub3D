@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/09 00:12:27 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:35:47 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,15 @@ void	windows_builder(t_data *data)
 	if (!data->win)
 	{
 		ft_printf("Failed to create window.\n");
-		clean_up(data); // Libera recursos em caso de falha.
-		handle_error(ERR_MLX_INIT_FAILED, data);       
-			// Considerar tratamento de erro alternativo se não quiser sair imediatamente.
+		clean_up(data);
+		exit(EXIT_FAILURE);
 	}
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (!data->img)
 	{
 		ft_printf("Failed to create image.\n");
 		clean_up(data);
-		handle_error(ERR_MLX_INIT_FAILED, data);
+		exit(EXIT_FAILURE);
 	}
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
@@ -35,55 +34,55 @@ void	windows_builder(t_data *data)
 
 void	clean_up(t_data *data)
 {
+	int	i;
+
 	if (data->img)
 		mlx_destroy_image(data->mlx, data->img);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->map.grid)
 	{
-		for (int i = 0; i < data->map.line_count; i++)
+		i = 0;
+		while (i < data->map.line_count)
 		{
 			free(data->map.grid[i]);
+			i++;
 		}
 		free(data->map.grid);
 	}
-	// Adicionar aqui a liberação de qualquer outra memória alocada
 }
 
 int	close_hook(t_data *data)
 {
 	clean_up(data);
-	exit(0); // Termina o programa.
+	exit(0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
+	t_error	err;
 
 	if (argc != 2)
 	{
 		ft_printf("Usage: ./cub3D <path_to_map.cub>\n");
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	ft_bzero(&data, sizeof(t_data)); // Assume que ft_bzero zera a memória.
-	data.map.grid = NULL;
-	data.map.line_count = 0;
-	data.mlx = mlx_init(); // Mova a inicialização do mlx para cá
+	ft_bzero(&data, sizeof(t_data));
+	data.mlx = mlx_init();
 	if (!data.mlx)
 	{
 		ft_printf("Failed to initialize MLX.\n");
-		return (1); // Falha ao inicializar a MiniLibX.
+		return (EXIT_FAILURE);
 	}
-	if (!parse_config_file(argv[1], &data))
+	parse_config_file(argv[1], &data, &err);
+	if (!parse_config(argv[1], &err))
 	{
-		ft_printf("Failed to parse the map file.\n");
-		clean_up(&data);
-			// Chama clean_up para liberar recursos alocados até agora.
-		return (1);
+		fprintf(stderr, "Erro: %s\n", err.message);
+		return (EXIT_FAILURE);
 	}
-	windows_builder(&data); // Inicializa a janela gráfica
-	// Registrar a função de callback para o evento de fechamento da janela.
+	windows_builder(&data);
 	mlx_hook(data.win, 17, 0L, close_hook, &data);
-	mlx_loop(data.mlx); // Inicia o loop de eventos da MiniLibX
+	mlx_loop(data.mlx);
 	return (0);
 }
