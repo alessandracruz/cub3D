@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
+/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:36:52 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/19 23:46:41 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/20 09:41:41 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	is_valid_map_char(char c)
 
 bool	is_map_char(char c)
 {
-	ft_printf("linha completa: %c:\n", c);
+	ft_printf("%c", c);
 	return (ft_strchr("01NSEW ", c) != NULL);
 }
 

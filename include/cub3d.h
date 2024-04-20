@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
+/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/18 23:39:18 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/20 16:41:28 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,16 @@ bool	process_map_line(t_data *data, int fd, t_error *error);
 
 bool	process_texture_line(char *line, t_data *data, t_error *error);
 
+// ARRAY_UTILS
+
+int		ft_arraylen(char **array);
+char	**add_str_in_array(char **array, char *str);
+
 /***** UTILS *****/
 
 void	handle_error(int error_code, t_data *data);
 void	set_error(t_error *error, char *message, int code);
+char	*ft_strldup(char *str, int size);
 char	*trim_spaces(char *str);
 bool	is_valid_config_line(const char *line);
 bool	is_valid_map_char(char c);
