@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
+/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/19 23:35:47 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/05/04 10:22:05 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,8 @@ void	clean_up(t_data *data)
 	if (data->map.grid)
 	{
 		i = 0;
-		while (i < data->map.line_count)
-		{
-			free(data->map.grid[i]);
-			i++;
-		}
+		while (data->map.grid[i])
+			free(data->map.grid[i++]);
 		free(data->map.grid);
 	}
 }
@@ -75,8 +72,7 @@ int	main(int argc, char **argv)
 		ft_printf("Failed to initialize MLX.\n");
 		return (EXIT_FAILURE);
 	}
-	parse_config_file(argv[1], &data, &err);
-	if (!parse_config(argv[1], &err))
+	if (!parse_config_file(argv[1], &data, &err) /* || !parse_config(argv[1], &err) */)
 	{
 		fprintf(stderr, "Erro: %s\n", err.message);
 		return (EXIT_FAILURE);

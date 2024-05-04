@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
+/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:11:45 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/19 23:39:53 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/04/20 09:58:23 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	count_map_lines(int fd)
 		}
 		free(line);
 	}
+	ft_printf("\n");
 	return (line_count);
 }
 
