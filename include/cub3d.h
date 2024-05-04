@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/20 16:41:28 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/04 11:35:46 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 #define ERROR_EMPTY_MAP 1008   // Error code when the map is found to be empty or invalid
 #define ERROR_INVALID_PATH 1009  // Error code when a texture path is invalid
 #define ERROR_MULTIPLE_PLAYERS 1010
+#define ERROR_INVALID_MAP 1011
 #define PARSE_OK 0
 
 
@@ -73,6 +74,12 @@ typedef struct s_data {
     char *name;
     t_map map; // Adicionado aqui
 } t_data;
+
+typedef struct s_point
+{
+	int x;
+	int y;
+} t_point;
 
 /***** PARSER ******/
 
@@ -112,7 +119,9 @@ bool	process_texture_line(char *line, t_data *data, t_error *error);
 // ARRAY_UTILS
 
 int		ft_arraylen(char **array);
+char	**ft_arraydup(char **array);
 char	**add_str_in_array(char **array, char *str);
+char	**fill_array_spaces(char **array);
 
 /***** UTILS *****/
 

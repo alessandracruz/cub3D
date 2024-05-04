@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:37:27 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/20 16:41:03 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/03 13:04:41 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,23 @@
 
 char	*ft_strldup(char *str, int size)
 {
-	int		check;
 	int		index;
 	char *new_str;
 
-	check = 0;
 	if ((int)ft_strlen(str) > size)
 		new_str = malloc((ft_strlen(str) + 1) * sizeof(char));
 	else
 		new_str = malloc((size + 1) * sizeof(char));
 	if (!new_str)
 		return (NULL);
-	index = -1;
-	while (str[++index])
-		new_str[index] = str[index];
-	if (str[index - 1] == '\n')
+	index = 0;
+	while (str[index] && str[index] != '\n' && index < size)
 	{
-		check = 1;
-		--index;
+		new_str[index] = str[index];
+		index++;
 	}
-	while (index < size - 1)
+	while (index < size)
 		new_str[index++] = ' ';
-	if (check)
-		new_str[index++] = '\n';
 	new_str[index] = '\0';
 	free(str);
 	return (new_str);
