@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/04 11:35:46 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/14 11:21:24 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@
 #define ERROR_INVALID_MAP 1011
 #define PARSE_OK 0
 
+# define KEY_ESC 65307
+# define KEY_A 97
+# define KEY_D 100
+# define KEY_W 119
+# define KEY_S 115
+
+#define INT_MAX 2147483647
 
 // Adicione mais conforme necessário
 
@@ -80,6 +87,37 @@ typedef struct s_point
 	int x;
 	int y;
 } t_point;
+
+typedef struct s_line
+{
+	int start;
+	int end;
+} t_line;
+
+typedef struct s_lvmap {
+} t_lvmap;
+
+typedef struct s_lmap {
+	int		x;
+	int		side;
+	int		mapX;
+	int		mapY;
+	int		stepX;
+	int		stepY;
+	double	posX;
+	double	posY;
+	double	dirX;
+	double	dirY;
+	double	planeX;
+	double	planeY;
+	double	cameraX;
+	double	rayDirX;
+	double	rayDirY;
+	double	sideDistX;
+	double	sideDistY;
+	double	deltaDistX;
+	double	deltaDistY;
+} t_lmap;
 
 /***** PARSER ******/
 
@@ -135,6 +173,8 @@ bool	is_map_char(char c);
 bool	is_map_line(const char *line);
 void	log_message(const char *format, ...);
 
+// LOAD_MAP
+void	load_map(t_data *data);
 
 // MAIN
 

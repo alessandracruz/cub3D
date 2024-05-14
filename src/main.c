@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/04 10:22:05 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/14 12:41:33 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	windows_builder(t_data *data)
 {
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, data->name);
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "cub3D");
 	if (!data->win)
 	{
 		ft_printf("Failed to create window.\n");
@@ -78,6 +78,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	windows_builder(&data);
+	load_map(&data);
 	mlx_hook(data.win, 17, 0L, close_hook, &data);
 	mlx_loop(data.mlx);
 	return (0);
