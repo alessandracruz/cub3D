@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/14 11:21:24 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/17 12:29:30 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,38 +65,6 @@ typedef struct s_map {
     int line_count; // Contagem de linhas do mapa
 } t_map;
 
-typedef struct {
-    char *message;
-    int error_code; // Você pode usar códigos específicos para diferentes tipos de erros
-} t_error;
-
-typedef struct s_data {
-    void *mlx;
-    void *win;
-    void *img;
-    char *addr;
-    int bits_per_pixel;
-    int line_length;
-    int endian;
-    char *name;
-    t_map map; // Adicionado aqui
-} t_data;
-
-typedef struct s_point
-{
-	int x;
-	int y;
-} t_point;
-
-typedef struct s_line
-{
-	int start;
-	int end;
-} t_line;
-
-typedef struct s_lvmap {
-} t_lvmap;
-
 typedef struct s_lmap {
 	int		x;
 	int		side;
@@ -118,6 +86,36 @@ typedef struct s_lmap {
 	double	deltaDistX;
 	double	deltaDistY;
 } t_lmap;
+
+typedef struct {
+    char *message;
+    int error_code; // Você pode usar códigos específicos para diferentes tipos de erros
+} t_error;
+
+typedef struct s_data {
+    void *mlx;
+    void *win;
+    void *img;
+    char *addr;
+    int bits_per_pixel;
+    int line_length;
+    int endian;
+    char *name;
+    t_map map; // Adicionado aqui
+	t_lmap	lmap;
+} t_data;
+
+typedef struct s_point
+{
+	int x;
+	int y;
+} t_point;
+
+typedef struct s_line
+{
+	int start;
+	int end;
+} t_line;
 
 /***** PARSER ******/
 
@@ -173,7 +171,14 @@ bool	is_map_char(char c);
 bool	is_map_line(const char *line);
 void	log_message(const char *format, ...);
 
+// DRAW
+
+void	draw_background(t_data *data);
+void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
+
 // LOAD_MAP
+
+void	init_lmap(t_data *data, t_lmap *lmap);
 void	load_map(t_data *data);
 
 // MAIN

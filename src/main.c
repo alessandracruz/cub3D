@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/14 12:41:33 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/17 11:03:00 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,55 @@ int	close_hook(t_data *data)
 	exit(0);
 }
 
+int move_ver(t_data *data, int type)
+{
+	if (type == -1)
+	{
+		data->lmap.posX -= data->lmap.dirX * 0.2;
+		data->lmap.posY -= data->lmap.dirY * 0.2;
+	}
+	else
+	{
+		data->lmap.posX += data->lmap.dirX * 0.2;
+		data->lmap.posY += data->lmap.dirY * 0.2;
+	}
+	return (1);
+}
+
+int move_hor(t_data *data, int type)
+{
+	double oldDirX;
+	double oldPlaneX;
+
+	oldDirX = data->lmap.dirX;
+	oldPlaneX = data->lmap.planeX;
+	data->lmap.dirX = data->lmap.dirX * cos(type * 0.1) - data->lmap.dirY * sin(type * 0.1);
+	data->lmap.dirY = oldDirX * sin(type * 0.1) + data->lmap.dirY * cos(type * 0.1);
+	data->lmap.planeX = data->lmap.planeX * cos(type * 0.1) - data->lmap.planeY * sin(type * 0.1);
+	data->lmap.planeY = oldPlaneX * sin(type * 0.1) + data->lmap.planeY * cos(type * 0.1);
+	return (1);
+}
+
+int	key(int key, t_data *data)
+{
+	int check = 0;
+
+	ft_printf("KEY=%d\n", key);
+	if (key == KEY_ESC)
+		close_hook(data);
+	if (key == KEY_W)
+		check = move_ver(data, 1);
+	if (key == KEY_A)
+		check = move_hor(data, 1);
+	if (key == KEY_D)
+		check = move_hor(data, -1);
+	if (key == KEY_S)
+		check = move_ver(data, -1);
+	if (check)
+		load_map(data);
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
@@ -78,7 +127,9 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	windows_builder(&data);
+	init_lmap(&data, &data.lmap);
 	load_map(&data);
+	mlx_hook(data.win, 2, 1L << 0, key, &data);
 	mlx_hook(data.win, 17, 0L, close_hook, &data);
 	mlx_loop(data.mlx);
 	return (0);
