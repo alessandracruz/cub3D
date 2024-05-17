@@ -6,56 +6,58 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:20:28 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/17 09:58:55 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/17 13:10:55 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	init_lmap(t_data */*data*/, t_lmap *lmap)
+void	init_lmap(t_lmap *lmap)
 {
-	lmap->posX = 22;
-	lmap->posY = 12;
-	lmap->dirX = -1;
-	lmap->dirY = 0;
-	lmap->planeX = 0;
-	lmap->planeY = 0.66;
+	lmap->pos_x = 22;
+	lmap->pos_y = 12;
+	lmap->dir_x = -1;
+	lmap->dir_y = 0;
+	lmap->plane_x = 0;
+	lmap->plane_y = 0.66;
 }
 
 void	get_side_dists(t_lmap *lmap)
 {
-	if (lmap->rayDirX < 0)
+	if (lmap->raydir_x < 0)
 	{
-		lmap->stepX = -1;
-		lmap->sideDistX = (lmap->posX - lmap->mapX) * lmap->deltaDistX;
+		lmap->step_x = -1;
+		lmap->side_dist_x = (lmap->pos_x - lmap->map_x) * lmap->delta_dist_x;
 	}
 	else
 	{
-		lmap->stepX = 1;
-		lmap->sideDistX = (lmap->mapX + 1.0 - lmap->posX) * lmap->deltaDistX;
+		lmap->step_x = 1;
+		lmap->side_dist_x = (lmap->map_x + 1.0 - lmap->pos_x)
+			* lmap->delta_dist_x;
 	}
-	if (lmap->rayDirY < 0)
+	if (lmap->raydir_y < 0)
 	{
-		lmap->stepY = -1;
-		lmap->sideDistY = (lmap->posY - lmap->mapY) * lmap->deltaDistY;
+		lmap->step_y = -1;
+		lmap->side_dist_y = (lmap->pos_y - lmap->map_y) * lmap->delta_dist_y;
 	}
 	else
 	{
-		lmap->stepY = 1;
-		lmap->sideDistY = (lmap->mapY + 1.0 - lmap->posY) * lmap->deltaDistY;
+		lmap->step_y = 1;
+		lmap->side_dist_y = (lmap->map_y + 1.0 - lmap->pos_y)
+			* lmap->delta_dist_y;
 	}
 }
 
 void	get_delta_dists(t_lmap *lmap)
 {
-	if (!lmap->rayDirX)
-		lmap->deltaDistX = INT_MAX;
+	if (!lmap->raydir_x)
+		lmap->delta_dist_x = INT_MAX;
 	else
-		lmap->deltaDistX = fabs(1 / lmap->rayDirX);
-	if (!lmap->rayDirY)
-		lmap->deltaDistY = INT_MAX;
+		lmap->delta_dist_x = fabs(1 / lmap->raydir_x);
+	if (!lmap->raydir_y)
+		lmap->delta_dist_y = INT_MAX;
 	else
-		lmap->deltaDistY = fabs(1 / lmap->rayDirY);
+		lmap->delta_dist_y = fabs(1 / lmap->raydir_y);
 }
 
 int	get_line_height(t_data *data, t_lmap *lmap)
@@ -64,27 +66,27 @@ int	get_line_height(t_data *data, t_lmap *lmap)
 	double	perp_wall_dist;
 
 	hit = 0;
-	while (hit == 0)
+	while (!hit)
 	{
-		if (lmap->sideDistX < lmap->sideDistY)
+		if (lmap->side_dist_x < lmap->side_dist_y)
 		{
-			lmap->sideDistX += lmap->deltaDistX;
-			lmap->mapX += lmap->stepX;
+			lmap->side_dist_x += lmap->delta_dist_x;
+			lmap->map_x += lmap->step_x;
 			lmap->side = 0;
 		}
 		else
 		{
-			lmap->sideDistY += lmap->deltaDistY;
-			lmap->mapY += lmap->stepY;
+			lmap->side_dist_y += lmap->delta_dist_y;
+			lmap->map_y += lmap->step_y;
 			lmap->side = 1;
 		}
-		if (data->map.grid[lmap->mapX][lmap->mapY] == '1')
+		if (data->map.grid[lmap->map_x][lmap->map_y] == '1')
 			hit = 1;
 	}
-	if (lmap->side == 0)
-		perp_wall_dist = (lmap->sideDistX - lmap->deltaDistX);
+	if (!lmap->side)
+		perp_wall_dist = (lmap->side_dist_x - lmap->delta_dist_x);
 	else
-		perp_wall_dist = (lmap->sideDistY - lmap->deltaDistY);
+		perp_wall_dist = (lmap->side_dist_y - lmap->delta_dist_y);
 	return ((int)(HEIGHT / perp_wall_dist));
 }
 
@@ -97,11 +99,13 @@ void	load_map(t_data *data)
 	data->lmap.x = -1;
 	while (++data->lmap.x < WIDTH)
 	{
-		data->lmap.cameraX = 2 * data->lmap.x / (double)WIDTH - 1;
-		data->lmap.rayDirX = data->lmap.dirX + data->lmap.planeX * data->lmap.cameraX;
-		data->lmap.rayDirY = data->lmap.dirY + data->lmap.planeY * data->lmap.cameraX;
-		data->lmap.mapX = (int)data->lmap.posX;
-		data->lmap.mapY = (int)data->lmap.posY;
+		data->lmap.camera_x = 2 * data->lmap.x / (double)WIDTH - 1;
+		data->lmap.raydir_x = data->lmap.dir_x + data->lmap.plane_x
+			* data->lmap.camera_x;
+		data->lmap.raydir_y = data->lmap.dir_y + data->lmap.plane_y
+			* data->lmap.camera_x;
+		data->lmap.map_x = (int)data->lmap.pos_x;
+		data->lmap.map_y = (int)data->lmap.pos_y;
 		get_delta_dists(&data->lmap);
 		get_side_dists(&data->lmap);
 		line_height = get_line_height(data, &data->lmap);

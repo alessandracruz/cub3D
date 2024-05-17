@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 15:59:10 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/04 11:21:39 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/17 13:13:47 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ int	ft_arraylen(char **array)
 	return (index);
 }
 
-char **ft_arraydup(char **array)
+char	**ft_arraydup(char **array)
 {
-	int index;
-	char **new_array;
+	int		index;
+	char	**new_array;
 
 	new_array = malloc((ft_arraylen(array) + 1) * sizeof(char *));
 	if (!new_array)
@@ -63,7 +63,7 @@ char	**add_str_in_array(char **array, char *str)
 char	**fill_array_spaces(char **array)
 {
 	int		index;
-	int 	length;
+	int		length;
 	char	**new_array;
 
 	length = -1;

@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/17 12:29:30 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/17 13:08:29 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,23 +68,23 @@ typedef struct s_map {
 typedef struct s_lmap {
 	int		x;
 	int		side;
-	int		mapX;
-	int		mapY;
-	int		stepX;
-	int		stepY;
-	double	posX;
-	double	posY;
-	double	dirX;
-	double	dirY;
-	double	planeX;
-	double	planeY;
-	double	cameraX;
-	double	rayDirX;
-	double	rayDirY;
-	double	sideDistX;
-	double	sideDistY;
-	double	deltaDistX;
-	double	deltaDistY;
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	double	pos_x;
+	double	pos_y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+	double	camera_x;
+	double	raydir_x;
+	double	raydir_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
 } t_lmap;
 
 typedef struct {
@@ -178,8 +178,12 @@ void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
 
 // LOAD_MAP
 
-void	init_lmap(t_data *data, t_lmap *lmap);
+void	init_lmap(t_lmap *lmap);
 void	load_map(t_data *data);
+
+// KEY
+
+int		key(int key, t_data *data);
 
 // MAIN
 
