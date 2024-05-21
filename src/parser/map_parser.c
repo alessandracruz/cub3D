@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:07:56 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/17 13:21:16 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/21 12:58:26 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,58 @@ bool	validate_map(char **map, t_error *error)
 	return (ft_free_arrays(map), true);
 }
 
+bool	get_player_pos(t_data *data, char **map, t_error *error)
+{
+	int y;
+	int x;
+	int	player_check;
+
+	y = -1;
+	player_check = 0;
+	while (map[++y])
+	{
+		x = -1;
+		while (map[y][++x])
+		{
+			if(map[y][x] == 'N' || map[y][x] == 'S' || map[y][x] == 'E' || map[y][x] == 'W')
+			{
+				if (player_check)
+					return (set_error(error, "Error opening file", ERROR_FILE_OPEN), false);
+				data->lmap.pos_y = x + 0.5;
+				data->lmap.pos_x = y + 0.5;
+				data->lmap.dir_x = -1;
+				data->lmap.dir_y = 0;
+				data->lmap.plane_x = 0;
+				data->lmap.plane_y = 0.66;
+				if ( map[y][x] == 'W')
+				{
+					data->lmap.dir_x = 0;
+					data->lmap.dir_y = -1;
+					data->lmap.plane_x = -0.66;
+					data->lmap.plane_y = 0;
+				}
+				if (map[y][x] == 'E')
+				{
+					data->lmap.dir_x = 0;
+					data->lmap.dir_y = 1;
+					data->lmap.plane_x = 0.66;
+					data->lmap.plane_y = 0;
+				}
+				if (map[y][x] == 'S')
+				{
+					data->lmap.dir_x = 1;
+					data->lmap.dir_y = 0;
+					data->lmap.plane_x = 0;
+					data->lmap.plane_y = -0.66;
+				}
+				map[y][x] = '0';
+				player_check = 1;
+			}
+		}
+	}
+	return (true);
+}
+
 bool	parse_config_file(char *file_path, t_data *data, t_error *error)
 {
 	int		fd;
@@ -113,6 +165,6 @@ bool	parse_config_file(char *file_path, t_data *data, t_error *error)
 	}
 	close(fd);
 	data->map.grid = fill_array_spaces(data->map.grid);
-	validate_map(ft_arraydup(data->map.grid), error);
-	return (true);
+	get_player_pos(data, data->map.grid, error);
+	return (validate_map(ft_arraydup(data->map.grid), error));
 }

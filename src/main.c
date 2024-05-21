@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/17 13:08:35 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/21 11:13:28 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,17 @@ int	close_hook(t_data *data)
 	exit(0);
 }
 
+void	init_game(t_data *data)
+{
+	data->key.close = 0;
+	data->key.up = 0;
+	data->key.left = 0;
+	data->key.right = 0;
+	data->key.down = 0;
+	windows_builder(data);
+	load_map(data);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
@@ -77,11 +88,11 @@ int	main(int argc, char **argv)
 		fprintf(stderr, "Erro: %s\n", err.message);
 		return (EXIT_FAILURE);
 	}
-	windows_builder(&data);
-	init_lmap(&data.lmap);
-	load_map(&data);
-	mlx_hook(data.win, 2, 1L << 0, key, &data);
-	mlx_hook(data.win, 17, 0L, close_hook, &data);
+	init_game(&data);
+	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
+ 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
+	mlx_hook(data.win, 17, 0, close_hook, &data);
+	mlx_loop_hook(data.mlx, key, &data);
 	mlx_loop(data.mlx);
 	return (0);
 }

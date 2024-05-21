@@ -6,21 +6,11 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:20:28 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/17 13:10:55 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/21 12:54:38 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	init_lmap(t_lmap *lmap)
-{
-	lmap->pos_x = 22;
-	lmap->pos_y = 12;
-	lmap->dir_x = -1;
-	lmap->dir_y = 0;
-	lmap->plane_x = 0;
-	lmap->plane_y = 0.66;
-}
 
 void	get_side_dists(t_lmap *lmap)
 {

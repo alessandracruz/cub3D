@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/17 13:08:29 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:24:13 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,14 @@ typedef struct {
     int error_code; // Você pode usar códigos específicos para diferentes tipos de erros
 } t_error;
 
+typedef struct s_key {
+	int	close;
+	int up;
+	int left;
+	int right;
+	int down;
+} t_key;
+
 typedef struct s_data {
     void *mlx;
     void *win;
@@ -103,6 +111,7 @@ typedef struct s_data {
     char *name;
     t_map map; // Adicionado aqui
 	t_lmap	lmap;
+	t_key	key;
 } t_data;
 
 typedef struct s_point
@@ -178,12 +187,13 @@ void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
 
 // LOAD_MAP
 
-void	init_lmap(t_lmap *lmap);
 void	load_map(t_data *data);
 
 // KEY
 
-int		key(int key, t_data *data);
+int		key_press(int key, t_data *data);
+int		key_release(int key, t_data *data);
+int		key(t_data *data);
 
 // MAIN
 
