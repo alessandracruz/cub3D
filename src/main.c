@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/21 11:13:28 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/24 14:12:25 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,23 @@ void	windows_builder(t_data *data)
 		clean_up(data);
 		exit(EXIT_FAILURE);
 	}
-	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
-	if (!data->img)
+	data->img.ptr = mlx_new_image(data->mlx, WIDTH, HEIGHT);
+	if (!data->img.ptr)
 	{
 		ft_printf("Failed to create image.\n");
 		clean_up(data);
 		exit(EXIT_FAILURE);
 	}
-	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
-			&data->line_length, &data->endian);
+	data->img.addr = (int *)mlx_get_data_addr(data->img.ptr, &data->img.bpp,
+			&data->img.size_line, &data->img.endian);
 }
 
 void	clean_up(t_data *data)
 {
 	int	i;
 
-	if (data->img)
-		mlx_destroy_image(data->mlx, data->img);
+	if (data->img.ptr)
+		mlx_destroy_image(data->mlx, data->img.ptr);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->map.grid)

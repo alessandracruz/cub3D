@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:20:28 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/21 12:54:38 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/24 14:24:02 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	get_delta_dists(t_lmap *lmap)
 int	get_line_height(t_data *data, t_lmap *lmap)
 {
 	int		hit;
-	double	perp_wall_dist;
 
 	hit = 0;
 	while (!hit)
@@ -74,10 +73,10 @@ int	get_line_height(t_data *data, t_lmap *lmap)
 			hit = 1;
 	}
 	if (!lmap->side)
-		perp_wall_dist = (lmap->side_dist_x - lmap->delta_dist_x);
+		lmap->perp_wall_dist = (lmap->side_dist_x - lmap->delta_dist_x);
 	else
-		perp_wall_dist = (lmap->side_dist_y - lmap->delta_dist_y);
-	return ((int)(HEIGHT / perp_wall_dist));
+		lmap->perp_wall_dist = (lmap->side_dist_y - lmap->delta_dist_y);
+	return ((int)(HEIGHT / lmap->perp_wall_dist));
 }
 
 void	load_map(t_data *data)
@@ -105,6 +104,25 @@ void	load_map(t_data *data)
 		draw_end = line_height / 2 + HEIGHT / 2;
 		if (draw_end >= HEIGHT)
 			draw_end = HEIGHT - 1;
+
+		double wall_x;
+		
+		if (!data->lmap.side)
+			wall_x = data->lmap.pos_y + data->lmap.perp_wall_dist * data->lmap.raydir_y;
+		else
+			wall_x = data->lmap.pos_x + data->lmap.perp_wall_dist * data->lmap.raydir_x;
+		wall_x -= floor(wall_x);
+		
+		data->lmap.tex_x = (int)(wall_x * (double)TEX_SIZE);
+
+		if (!data->lmap.side && data->lmap.raydir_x > 0)
+			data->lmap.tex_x = TEX_SIZE - data->lmap.tex_x - 1;
+		if (data->lmap.side && data->lmap.raydir_y < 0)
+			data->lmap.tex_x = TEX_SIZE - data->lmap.tex_x - 1;
+
+		data->lmap.step = 1.0 * TEX_SIZE / line_height;
+		data->lmap.tex_pos = (draw_start - HEIGHT / 2 + line_height / 2) * data->lmap.step;
 		draw_ver_line(data, &data->lmap, (t_line){draw_start, draw_end});
 	}
+	mlx_put_image_to_window(data->mlx, data->win, data->img.ptr, 0, 0);
 }

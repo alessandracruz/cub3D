@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/21 13:24:13 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/24 14:20:22 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define TEX_PATH_LEN 512
 # define WIDTH 640
 # define HEIGHT 480
+# define TEX_SIZE 64
 #define ERR_MLX_INIT_FAILED 1
 #define ERR_WIN_CREATION_FAILED 2
 #define ERR_IMG_CREATION_FAILED 3
@@ -54,20 +55,30 @@
 
 // Adicione mais conforme necessário
 
+typedef struct s_img {
+	void *ptr;
+    int *addr;
+    int bpp;
+    int size_line;
+    int endian;
+	char path[TEX_PATH_LEN];
+} t_img;
+
 typedef struct s_map {
-    char north[TEX_PATH_LEN]; // Caminho para a textura do norte
-    char south[TEX_PATH_LEN]; // Caminho para a textura do sul
-    char west[TEX_PATH_LEN];  // Caminho para a textura do oeste
-    char east[TEX_PATH_LEN];  // Caminho para a textura do leste
-    int floor;   // Cor do chão em formato hexadecimal 0xRRGGBB
-    int ceiling; // Cor do teto em formato hexadecimal 0xRRGGBB
-    char **grid; // Matriz de caracteres representando o mapa
-    int line_count; // Contagem de linhas do mapa
+    t_img north;
+    t_img south;
+    t_img west;
+    t_img east;
+    int floor;
+    int ceiling;
+    char **grid;
+    int line_count;
 } t_map;
 
 typedef struct s_lmap {
 	int		x;
 	int		side;
+	double	step;
 	int		map_x;
 	int		map_y;
 	int		step_x;
@@ -76,6 +87,8 @@ typedef struct s_lmap {
 	double	pos_y;
 	double	dir_x;
 	double	dir_y;
+	int		tex_x;
+	double	tex_pos;
 	double	plane_x;
 	double	plane_y;
 	double	camera_x;
@@ -85,6 +98,7 @@ typedef struct s_lmap {
 	double	side_dist_y;
 	double	delta_dist_x;
 	double	delta_dist_y;
+	double	perp_wall_dist;
 } t_lmap;
 
 typedef struct {
@@ -103,15 +117,12 @@ typedef struct s_key {
 typedef struct s_data {
     void *mlx;
     void *win;
-    void *img;
-    char *addr;
-    int bits_per_pixel;
-    int line_length;
-    int endian;
+
     char *name;
-    t_map map; // Adicionado aqui
+    t_map	map;
 	t_lmap	lmap;
 	t_key	key;
+	t_img	img;
 } t_data;
 
 typedef struct s_point

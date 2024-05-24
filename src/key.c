@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 13:01:10 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/21 11:20:47 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/24 14:16:18 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	move_ver(t_data *data, int type)
 {
 	double	mov_speed;
 
-	mov_speed = 0.05;
+	mov_speed = 0.007;
 	if (type == -1)
 	{
 		if (data->map.grid[(int)(data->lmap.pos_x - data->lmap.dir_x
@@ -44,7 +44,7 @@ int	move_hor(t_data *data, int type)
 	double	old_plane_x;
 	double	rot_speed;
 
-	rot_speed = 0.015;
+	rot_speed = 0.002;
 	old_dir_x = data->lmap.dir_x;
 	old_plane_x = data->lmap.plane_x;
 	data->lmap.dir_x = data->lmap.dir_x * cos(type * rot_speed)

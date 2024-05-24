@@ -1,3 +1,11 @@
+NO ./assets/textures/texture1.xpm
+SO ./assets/textures/texture1.xpm
+WE ./assets/textures/texture2.xpm
+EA ./assets/textures/texture2.xpm
+
+F 150,75,0
+C 41,117,119
+
 111111111111111111111111
 100000000000000000000001
 100000000000000000000001
