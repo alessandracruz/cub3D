@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
+/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/21 13:24:13 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/23 22:32:19 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,25 @@ typedef struct s_lmap {
 	double	side_dist_y;
 	double	delta_dist_x;
 	double	delta_dist_y;
+	double perp_wall_dist;
+    double wall_x; // Adicionado aqui
+    int line_height; // Adicionado aqui
 } t_lmap;
 
 typedef struct {
     char *message;
     int error_code; // Você pode usar códigos específicos para diferentes tipos de erros
 } t_error;
+
+typedef struct {
+    void *img;
+    int *data;
+    int width;
+    int height;
+    int bpp;
+    int size_line;
+    int endian;
+} t_texture;
 
 typedef struct s_key {
 	int	close;
@@ -112,6 +125,7 @@ typedef struct s_data {
     t_map map; // Adicionado aqui
 	t_lmap	lmap;
 	t_key	key;
+	t_texture textures[4];
 } t_data;
 
 typedef struct s_point
@@ -160,6 +174,7 @@ bool	process_map_line(t_data *data, int fd, t_error *error);
 // TEXTURE_UTILS
 
 bool	process_texture_line(char *line, t_data *data, t_error *error);
+void	init_textures(t_data *data); // Adicionei esta linha
 
 // ARRAY_UTILS
 

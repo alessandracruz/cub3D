@@ -6,7 +6,7 @@
 /*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 22:07:45 by acastilh          #+#    #+#             */
-/*   Updated: 2024/04/17 18:53:53 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/05/23 22:26:54 by acastilh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,4 @@ size_t	gnl_strlen(char *str)
 			len ++;
 	return (len);
 }
+
