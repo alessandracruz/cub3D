@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:07:56 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/21 12:58:26 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:54:43 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,32 +100,32 @@ bool	get_player_pos(t_data *data, char **map, t_error *error)
 			{
 				if (player_check)
 					return (set_error(error, "Error opening file", ERROR_FILE_OPEN), false);
-				data->lmap.pos_y = x + 0.5;
-				data->lmap.pos_x = y + 0.5;
-				data->lmap.dir_x = -1;
-				data->lmap.dir_y = 0;
-				data->lmap.plane_x = 0;
-				data->lmap.plane_y = 0.66;
+				data->lmap.pos[Y] = x + 0.5;
+				data->lmap.pos[X] = y + 0.5;
+				data->lmap.dir[X] = -1;
+				data->lmap.dir[Y] = 0;
+				data->lmap.plane[X] = 0;
+				data->lmap.plane[Y] = 0.66;
 				if ( map[y][x] == 'W')
 				{
-					data->lmap.dir_x = 0;
-					data->lmap.dir_y = -1;
-					data->lmap.plane_x = -0.66;
-					data->lmap.plane_y = 0;
+					data->lmap.dir[X] = 0;
+					data->lmap.dir[Y] = -1;
+					data->lmap.plane[X] = -0.66;
+					data->lmap.plane[Y] = 0;
 				}
 				if (map[y][x] == 'E')
 				{
-					data->lmap.dir_x = 0;
-					data->lmap.dir_y = 1;
-					data->lmap.plane_x = 0.66;
-					data->lmap.plane_y = 0;
+					data->lmap.dir[X] = 0;
+					data->lmap.dir[Y] = 1;
+					data->lmap.plane[X] = 0.66;
+					data->lmap.plane[Y] = 0;
 				}
 				if (map[y][x] == 'S')
 				{
-					data->lmap.dir_x = 1;
-					data->lmap.dir_y = 0;
-					data->lmap.plane_x = 0;
-					data->lmap.plane_y = -0.66;
+					data->lmap.dir[X] = 1;
+					data->lmap.dir[Y] = 0;
+					data->lmap.plane[X] = 0;
+					data->lmap.plane[Y] = -0.66;
 				}
 				map[y][x] = '0';
 				player_check = 1;

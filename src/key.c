@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 13:01:10 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/24 14:16:18 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:56:48 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,42 @@
 
 int	move_ver(t_data *data, int type)
 {
-	double	mov_speed;
-
-	mov_speed = 0.007;
 	if (type == -1)
 	{
-		if (data->map.grid[(int)(data->lmap.pos_x - data->lmap.dir_x
-				* mov_speed)][(int)data->lmap.pos_y] == '0')
-			data->lmap.pos_x -= data->lmap.dir_x * mov_speed;
-		if (data->map.grid[(int)(data->lmap.pos_x)][(int)
-				(data->lmap.pos_y - data->lmap.dir_y * mov_speed)] == '0')
-			data->lmap.pos_y -= data->lmap.dir_y * mov_speed;
+		if (data->map.grid[(int)(data->lmap.pos[X] - data->lmap.dir[X]
+				* MOV_SPEED)][(int)data->lmap.pos[Y]] == '0')
+			data->lmap.pos[X] -= data->lmap.dir[X] * MOV_SPEED;
+		if (data->map.grid[(int)(data->lmap.pos[X])][(int)
+				(data->lmap.pos[Y] - data->lmap.dir[Y] * MOV_SPEED)] == '0')
+			data->lmap.pos[Y] -= data->lmap.dir[Y] * MOV_SPEED;
 	}
 	else
 	{
-		if (data->map.grid[(int)(data->lmap.pos_x + data->lmap.dir_x
-				* mov_speed)][(int)data->lmap.pos_y] == '0')
-			data->lmap.pos_x += data->lmap.dir_x * mov_speed;
-		if (data->map.grid[(int)(data->lmap.pos_x)][(int)
-				(data->lmap.pos_y + data->lmap.dir_y * mov_speed)] == '0')
-			data->lmap.pos_y += data->lmap.dir_y * mov_speed;
+		if (data->map.grid[(int)(data->lmap.pos[X] + data->lmap.dir[X]
+				* MOV_SPEED)][(int)data->lmap.pos[Y]] == '0')
+			data->lmap.pos[X] += data->lmap.dir[X] * MOV_SPEED;
+		if (data->map.grid[(int)(data->lmap.pos[X])][(int)
+				(data->lmap.pos[Y] + data->lmap.dir[Y] * MOV_SPEED)] == '0')
+			data->lmap.pos[Y] += data->lmap.dir[Y] * MOV_SPEED;
 	}
 	return (1);
 }
 
 int	move_hor(t_data *data, int type)
 {
-	double	old_dir_x;
-	double	old_plane_x;
-	double	rot_speed;
+	double	old_dir[X];
+	double	old_plane[X];
 
-	rot_speed = 0.002;
-	old_dir_x = data->lmap.dir_x;
-	old_plane_x = data->lmap.plane_x;
-	data->lmap.dir_x = data->lmap.dir_x * cos(type * rot_speed)
-		- data->lmap.dir_y * sin(type * rot_speed);
-	data->lmap.dir_y = old_dir_x * sin(type * rot_speed)
-		+ data->lmap.dir_y * cos(type * rot_speed);
-	data->lmap.plane_x = data->lmap.plane_x * cos(type * rot_speed)
-		- data->lmap.plane_y * sin(type * rot_speed);
-	data->lmap.plane_y = old_plane_x * sin(type * rot_speed)
-		+ data->lmap.plane_y * cos(type * rot_speed);
+	old_dir[X] = data->lmap.dir[X];
+	old_plane[X] = data->lmap.plane[X];
+	data->lmap.dir[X] = data->lmap.dir[X] * cos(type * ROT_SPEED)
+		- data->lmap.dir[Y] * sin(type * ROT_SPEED);
+	data->lmap.dir[Y] = old_dir[X] * sin(type * ROT_SPEED)
+		+ data->lmap.dir[Y] * cos(type * ROT_SPEED);
+	data->lmap.plane[X] = data->lmap.plane[X] * cos(type * ROT_SPEED)
+		- data->lmap.plane[Y] * sin(type * ROT_SPEED);
+	data->lmap.plane[Y] = old_plane[X] * sin(type * ROT_SPEED)
+		+ data->lmap.plane[Y] * cos(type * ROT_SPEED);
 	return (1);
 }
 

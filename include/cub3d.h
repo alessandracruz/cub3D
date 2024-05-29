@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/24 14:20:22 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/29 13:12:47 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@
 # include <string.h>
 # include <unistd.h>
 
-# define TEX_PATH_LEN 512
 # define WIDTH 640
 # define HEIGHT 480
-# define TEX_SIZE 64
+
+# define MOV_SPEED 0.007
+# define ROT_SPEED 0.0025
+
+# define TEX_PATH_LEN 512
 #define ERR_MLX_INIT_FAILED 1
 #define ERR_WIN_CREATION_FAILED 2
 #define ERR_IMG_CREATION_FAILED 3
@@ -51,24 +54,22 @@
 # define KEY_W 119
 # define KEY_S 115
 
-#define INT_MAX 2147483647
-
-// Adicione mais conforme necessário
+# define X 0
+# define Y 1
 
 typedef struct s_img {
-	void *ptr;
-    int *addr;
-    int bpp;
-    int size_line;
-    int endian;
-	char path[TEX_PATH_LEN];
+	int		w;
+	int		h;
+	void	*ptr;
+    int		*addr;
+    int		bpp;
+    int		size_line;
+    int		endian;
+	char	path[TEX_PATH_LEN];
 } t_img;
 
 typedef struct s_map {
-    t_img north;
-    t_img south;
-    t_img west;
-    t_img east;
+    t_img tex[4];
     int floor;
     int ceiling;
     char **grid;
@@ -78,26 +79,18 @@ typedef struct s_map {
 typedef struct s_lmap {
 	int		x;
 	int		side;
-	double	step;
-	int		map_x;
-	int		map_y;
-	int		step_x;
-	int		step_y;
-	double	pos_x;
-	double	pos_y;
-	double	dir_x;
-	double	dir_y;
-	int		tex_x;
+	int		map[2];
+	double	pos[2];
+	double	dir[2];
+	int		tex[2];
+	int		step[2];
 	double	tex_pos;
-	double	plane_x;
-	double	plane_y;
+	double	tex_step;
 	double	camera_x;
-	double	raydir_x;
-	double	raydir_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
+	double	plane[2];
+	double	raydir[2];
+	double	side_dist[2];
+	double	delta_dist[2];
 	double	perp_wall_dist;
 } t_lmap;
 
@@ -253,8 +246,8 @@ typedef struct s_player
 {
 	double x;     // Posição X do jogador no mapa
 	double y;     // Posição Y do jogador no mapa
-	double dir_x; // Direção X da visão do jogador
-	double dir_y; // Direção Y da visão do jogador
+	double dir[X]; // Direção X da visão do jogador
+	double dir[Y]; // Direção Y da visão do jogador
 }			t_player;
 
 typedef enum e_parse_error
