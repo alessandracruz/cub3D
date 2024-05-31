@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/29 13:12:47 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:46:02 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@
 
 # define X 0
 # define Y 1
+
+# define NO 0
+# define SO 1
+# define WE 2
+# define EA 3
 
 typedef struct s_img {
 	int		w;
@@ -187,7 +192,7 @@ void	log_message(const char *format, ...);
 // DRAW
 
 void	draw_background(t_data *data);
-void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
+void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line, int tex);
 
 // LOAD_MAP
 

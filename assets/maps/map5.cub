@@ -1,7 +1,7 @@
-NO ./assets/textures/texture1.xpm
-SO ./assets/textures/texture1.xpm
-WE ./assets/textures/texture2.xpm
-EA ./assets/textures/texture2.xpm
+NO ./assets/textures/bluestone.xpm
+SO ./assets/textures/redbrick.xpm
+WE ./assets/textures/wood.xpm
+EA ./assets/textures/greystone.xpm
 
 F 150,75,0
 C 41,117,119
