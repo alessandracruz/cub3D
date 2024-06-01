@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 20:52:12 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 11:10:58 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 12:35:44 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ int	convert_rgb_to_hex(const char *rgb)
 	return ((r << 16) | (g << 8) | b);
 }
 
+bool	process_color_set(t_color *color, t_error *error, int color_hex)
+{
+	if (color->trials)
+		return (set_error(error, "Duplicate color identifier",
+				ERROR_UNKNOWN_IDENTIFIER));
+	color->color = color_hex;
+	color->trials++;
+	return (true);
+}
+
 bool	process_color_line(char *line, t_data *data, t_error *error)
 {
 	int			color_hex;
@@ -42,9 +52,9 @@ bool	process_color_line(char *line, t_data *data, t_error *error)
 		return (set_error(error, "RGB to Hex conversion failed",
 				ERROR_CONVERSION_FAILED));
 	if (ft_strncmp(line, "F ", 2) == 0)
-		data->map.floor = color_hex;
+		return (process_color_set(&data->map.floor, error, color_hex));
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		data->map.ceiling = color_hex;
+		return (process_color_set(&data->map.ceiling, error, color_hex));
 	else
 		return (set_error(error, "Unknown color identifier",
 				ERROR_UNKNOWN_IDENTIFIER));

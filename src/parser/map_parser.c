@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 18:07:56 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 11:27:12 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 12:05:47 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,13 @@ bool	parse_config_check(t_data *data, t_error *error)
 	int	index;
 
 	index = -1;
+	if (!data->map.ceiling.trials || !data->map.floor.trials)
+		return (set_error(error, "Missing color(s)",
+				ERROR_UNKNOWN_IDENTIFIER));
 	while (++index < 4)
 	{
 		if (!data->map.tex[index].trials)
-			return (set_error(error, "missing texture(s)",
+			return (set_error(error, "Missing texture(s)",
 					ERROR_UNKNOWN_IDENTIFIER));
 	}
 	return (true);

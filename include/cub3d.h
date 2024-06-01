@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 10:49:43 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 12:07:35 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,18 @@ typedef struct s_img {
 	int		trials;
 }	t_img;
 
+typedef struct s_color {
+	int	color;
+	int	trials;
+}	t_color;
+
 typedef struct s_map {
 	int		x;
 	int		y;
 	int		p_check;
 	t_img	tex[4];
-	int		floor;
-	int		ceiling;
+	t_color	floor;
+	t_color	ceiling;
 	char	**grid;
 	int		line_count;
 }	t_map;
@@ -212,9 +217,9 @@ void	load_map(t_data *data);
 
 // MOVE
 
-int	move_ver(t_data *data, int type);
-int	move_hor(t_data *data, int type);
-int	rotate(t_data *data, int type);
+int		move_ver(t_data *data, int type);
+int		move_hor(t_data *data, int type);
+int		rotate(t_data *data, int type);
 
 // KEY
 
