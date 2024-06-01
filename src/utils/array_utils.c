@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 15:59:10 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/17 13:13:47 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:06:46 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,10 @@ char	**add_str_in_array(char **array, char *str)
 	return (new_array);
 }
 
-char	**fill_array_spaces(char **array)
+int	fill_array_spaces_helper(char **array)
 {
 	int		index;
 	int		length;
-	char	**new_array;
 
 	length = -1;
 	index = -1;
@@ -78,6 +77,18 @@ char	**fill_array_spaces(char **array)
 				length = ft_strlen(array[index]);
 		}
 	}
+	return (length);
+}
+
+char	**fill_array_spaces(char **array)
+{
+	int		index;
+	int		length;
+	char	**new_array;
+
+	if (!array)
+		return (NULL);
+	length = fill_array_spaces_helper(array);
 	new_array = malloc((ft_arraylen(array) + 1) * sizeof(char **));
 	if (!new_array)
 		return (NULL);

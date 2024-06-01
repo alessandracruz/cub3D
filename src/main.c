@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 10:29:18 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:44:44 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ void	clean_up(t_data *data)
 
 	if (data->img.ptr)
 		mlx_destroy_image(data->mlx, data->img.ptr);
+	i = -1;
+	while (++i < 4)
+	{
+		if (data->map.tex[i].trials)
+			mlx_destroy_image(data->mlx, data->map.tex[i].ptr);
+	}
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->map.grid)
@@ -47,6 +53,8 @@ void	clean_up(t_data *data)
 			free(data->map.grid[i++]);
 		free(data->map.grid);
 	}
+	if (data->mlx)
+		free(data->mlx);
 }
 
 int	close_hook(t_data *data)
@@ -64,6 +72,10 @@ void	init_game(t_data *data)
 	data->key.a = 0;
 	data->key.d = 0;
 	data->key.s = 0;
+	data->map.tex[0].trials = 0;
+	data->map.tex[1].trials = 0;
+	data->map.tex[2].trials = 0;
+	data->map.tex[3].trials = 0;
 	windows_builder(data);
 	load_map(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
@@ -93,6 +105,7 @@ int	main(int argc, char **argv)
 	if (!parse_config(argv[1], &data, &err))
 	{
 		fprintf(stderr, "Erro: %s\n", err.message);
+		clean_up(&data);
 		return (EXIT_FAILURE);
 	}
 	init_game(&data);

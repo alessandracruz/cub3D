@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 10:43:23 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:49:43 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_img {
 	int		size_line;
 	int		endian;
 	char	path[TEX_PATH_LEN];
+	int		trials;
 }	t_img;
 
 typedef struct s_map {
