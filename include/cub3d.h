@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 10:06:36 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:43:23 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,13 @@
 # define ERROR_INVALID_MAP 1011
 # define PARSE_OK 0
 
-# define KEY_ESC 65307
 # define KEY_A 97
 # define KEY_D 100
 # define KEY_W 119
 # define KEY_S 115
+# define KEY_ESC 65307
+# define KEY_LEFT 65361
+# define KEY_RIGHT 65363
 
 # define X 0
 # define Y 1
@@ -110,10 +112,12 @@ typedef struct s_error{
 
 typedef struct s_key {
 	int	close;
-	int	up;
+	int	w;
+	int	a;
+	int	d;
+	int	s;
 	int	left;
 	int	right;
-	int	down;
 }	t_key;
 
 typedef struct s_data {
@@ -140,12 +144,12 @@ typedef struct s_line
 
 /***** PARSER ******/
 
-// COLOR_UTILS
+// COLOR_PARSER
 
 bool	process_color_line(char *line, t_data *data, t_error *error);
 int		convert_rgb_to_hex(const char *rgb);
 
-// VALIDATE
+// MAP_VALIDATE
 
 bool	validate_map(char **map, t_error *error);
 
@@ -204,6 +208,12 @@ void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
 // LOAD_MAP
 
 void	load_map(t_data *data);
+
+// MOVE
+
+int	move_ver(t_data *data, int type);
+int	move_hor(t_data *data, int type);
+int	rotate(t_data *data, int type);
 
 // KEY
 

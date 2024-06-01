@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 09:59:43 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:29:18 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ int	close_hook(t_data *data)
 void	init_game(t_data *data)
 {
 	data->key.close = 0;
-	data->key.up = 0;
 	data->key.left = 0;
 	data->key.right = 0;
-	data->key.down = 0;
+	data->key.w = 0;
+	data->key.a = 0;
+	data->key.d = 0;
+	data->key.s = 0;
 	windows_builder(data);
 	load_map(data);
 	mlx_hook(data->win, 2, 1L << 0, key_press, data);
