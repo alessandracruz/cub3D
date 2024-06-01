@@ -6,11 +6,36 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:20:28 by matlopes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:45:03 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:18:58 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	get_tex_values(t_data *data, t_lmap *lmap, int line_height)
+{
+	double	wall_x;
+
+	wall_x = lmap->pos[1 - lmap->side] + lmap->perp_wall_dist
+		* lmap->raydir[1 - lmap->side];
+	wall_x -= floor(wall_x);
+	if (lmap->side && lmap->raydir[Y] > 0)
+		lmap->tex_type = EA;
+	else if (lmap->side && lmap->raydir[Y] < 0)
+		lmap->tex_type = WE;
+	else if (!lmap->side && lmap->raydir[X] > 0)
+		lmap->tex_type = SO;
+	else if (!lmap->side && lmap->raydir[X] < 0)
+		lmap->tex_type = NO;
+	lmap->tex[X] = (int)(wall_x * (double)data->map.tex[lmap->tex_type].w);
+	if ((!lmap->side && lmap->raydir[X] > 0)
+		|| (lmap->side && lmap->raydir[Y] < 0))
+		lmap->tex[X] = data->map.tex[lmap->tex_type].w
+			- lmap->tex[X] - 1;
+	lmap->tex_step = 1.0 * data->map.tex[lmap->tex_type].h / line_height;
+	lmap->tex_pos = (-HEIGHT / 2 + line_height / 2)
+		* lmap->tex_step;
+}
 
 int	get_line_height(t_data *data, t_lmap *lmap)
 {
@@ -76,8 +101,6 @@ void	load_map_values(t_lmap *lmap)
 
 void	load_map(t_data *data)
 {
-	int		tex_index;
-	double	wall_x;
 	int		draw_end;
 	int		draw_start;
 	int		line_height;
@@ -89,27 +112,8 @@ void	load_map(t_data *data)
 		line_height = get_line_height(data, &data->lmap);
 		draw_start = -line_height / 2 + HEIGHT / 2;
 		draw_end = line_height / 2 + HEIGHT / 2;
-		wall_x = data->lmap.pos[1 - data->lmap.side] + data->lmap.perp_wall_dist
-			* data->lmap.raydir[1 - data->lmap.side];
-		wall_x -= floor(wall_x);
-
-		if (data->lmap.side && data->lmap.raydir[Y] > 0)
-			tex_index = EA;
-		else if (data->lmap.side && data->lmap.raydir[Y] < 0)
-			tex_index = WE;
-		else if (!data->lmap.side && data->lmap.raydir[X] > 0)
-			tex_index = SO;
-		else if (!data->lmap.side && data->lmap.raydir[X] < 0)
-			tex_index = NO;
-
-		data->lmap.tex[X] = (int)(wall_x * (double)data->map.tex[tex_index].w);
-		if ((!data->lmap.side && data->lmap.raydir[X] > 0)
-			|| (data->lmap.side && data->lmap.raydir[Y] < 0))
-			data->lmap.tex[X] = data->map.tex[tex_index].w - data->lmap.tex[X] - 1;
-		data->lmap.tex_step = 1.0 * data->map.tex[tex_index].h / line_height;
-		data->lmap.tex_pos = (-HEIGHT / 2 + line_height / 2)
-			* data->lmap.tex_step;
-		draw_ver_line(data, &data->lmap, (t_line){draw_start, draw_end}, tex_index);
+		get_tex_values(data, &data->lmap, line_height);
+		draw_ver_line(data, &data->lmap, (t_line){draw_start, draw_end});
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img.ptr, 0, 0);
 }

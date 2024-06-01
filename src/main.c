@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/05/24 14:12:25 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 08:01:26 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 	}
 	init_game(&data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
- 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
+	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
 	mlx_hook(data.win, 17, 0, close_hook, &data);
 	mlx_loop_hook(data.mlx, key, &data);
 	mlx_loop(data.mlx);

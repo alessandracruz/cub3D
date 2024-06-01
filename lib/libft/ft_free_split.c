@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acastilh <acastilh@student.42.rio>         +#+  +:+       +#+        */
+/*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 23:34:05 by acastilh          #+#    #+#             */
-/*   Updated: 2024/03/27 23:34:53 by acastilh         ###   ########.fr       */
+/*   Updated: 2024/06/01 08:32:22 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ void	ft_free_split(char **array)
 	{
 		i = 0;
 		while (array[i] != NULL)
-		{
-			free(array[i]); 
-			i++;
-		}
+			free(array[i++]);
 		free(array);
 	}
 }
