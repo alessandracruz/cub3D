@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 13:26:29 by matlopes          #+#    #+#             */
-/*   Updated: 2024/06/01 08:16:33 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 09:47:26 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	validate_map_search(char **map, t_point size, t_point cur)
 	return (errors);
 }
 
-int	validate_map_util(char **map, int map_height)
+int	validate_map_start_search(char **map, int map_height)
 {
 	int	y;
 	int	x;
@@ -67,6 +67,23 @@ int	validate_map_util(char **map, int map_height)
 	return (errors);
 }
 
+bool	validate_map_helper(char **map, t_error *error, t_point pos)
+{
+	if (!is_valid_character(map[pos.y][pos.x]))
+		return (set_error(error, "Map has a invalid character",
+				ERROR_INVALID_MAP));
+	if ((pos.y == 0 && !(map[pos.y][pos.x] == '1'
+			|| map[pos.y][pos.x] == ' ')) || (!map[pos.y + 1]
+		&& !(map[pos.y][pos.x] == '1' || map[pos.y][pos.x] == ' '))
+		|| (pos.x == 0 && !(map[pos.y][pos.x] == '1'
+		|| map[pos.y][pos.x] == ' '))
+		|| (!map[pos.y][pos.x + 1] && !(map[pos.y][pos.x] == '1'
+		|| map[pos.y][pos.x] == ' ')))
+		return (set_error(error, "Map must be closed",
+				ERROR_INVALID_MAP));
+	return (true);
+}
+
 bool	validate_map(char **map, t_error *error)
 {
 	int	y;
@@ -78,17 +95,15 @@ bool	validate_map(char **map, t_error *error)
 		x = 0;
 		while (map[y][x] && map[y][x] != '\n')
 		{
-			if ((y == 0 && !(map[y][x] == '1' || map[y][x] == ' '))
-					|| (!map[y + 1] && !(map[y][x] == '1' || map[y][x] == ' '))
-					|| (x == 0 && !(map[y][x] == '1' || map[y][x] == ' '))
-					|| (!map[y][x + 1] && !(map[y][x] == '1'
-					|| map[y][x] == ' ')))
-				return (set_error(error, "Map must be closed",
-						ERROR_INVALID_MAP), ft_free_arrays(map), false);
+			if (!validate_map_helper(map, error, (t_point){x, y}))
+			{
+				ft_free_arrays(map);
+				return (false);
+			}
 			x++;
 		}
 	}
-	if (validate_map_util(map, y))
+	if (validate_map_start_search(map, y))
 		return (set_error(error, "Map must be closed",
 				ERROR_INVALID_MAP), ft_free_arrays(map), false);
 	return (ft_free_arrays(map), true);

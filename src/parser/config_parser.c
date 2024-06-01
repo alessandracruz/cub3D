@@ -6,13 +6,13 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 19:28:53 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 08:19:32 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:02:51 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-bool	parse_config(const char *filename, t_error *error)
+/* bool	parse_config(const char *filename, t_error *error)
 {
 	FILE	*file;
 	bool	result;
@@ -97,6 +97,7 @@ int	skip_to_next_line(const char *line)
 		return (next_line - line + 1);
 	return (0);
 }
+ */
 
 bool	is_valid_character(char c)
 {

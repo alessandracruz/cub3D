@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:51:11 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 08:01:26 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 09:59:43 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,11 @@ void	init_game(t_data *data)
 	data->key.down = 0;
 	windows_builder(data);
 	load_map(data);
+	mlx_hook(data->win, 2, 1L << 0, key_press, data);
+	mlx_hook(data->win, 3, 1L << 1, key_release, data);
+	mlx_hook(data->win, 17, 0, close_hook, data);
+	mlx_loop_hook(data->mlx, key, data);
+	mlx_loop(data->mlx);
 }
 
 int	main(int argc, char **argv)
@@ -71,7 +76,7 @@ int	main(int argc, char **argv)
 	t_data	data;
 	t_error	err;
 
-	if (argc != 2)
+	if (argc != 2 || ft_strncmp(argv[1] + (ft_strlen(argv[1]) - 4), ".cub", 5))
 	{
 		ft_printf("Usage: ./cub3D <path_to_map.cub>\n");
 		return (EXIT_FAILURE);
@@ -83,16 +88,11 @@ int	main(int argc, char **argv)
 		ft_printf("Failed to initialize MLX.\n");
 		return (EXIT_FAILURE);
 	}
-	if (!parse_config_file(argv[1], &data, &err) /* || !parse_config(argv[1], &err) */)
+	if (!parse_config(argv[1], &data, &err))
 	{
 		fprintf(stderr, "Erro: %s\n", err.message);
 		return (EXIT_FAILURE);
 	}
 	init_game(&data);
-	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
-	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
-	mlx_hook(data.win, 17, 0, close_hook, &data);
-	mlx_loop_hook(data.mlx, key, &data);
-	mlx_loop(data.mlx);
 	return (0);
 }

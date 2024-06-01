@@ -6,7 +6,7 @@
 /*   By: matlopes <matlopes@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:13:42 by acastilh          #+#    #+#             */
-/*   Updated: 2024/06/01 08:30:22 by matlopes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:06:36 by matlopes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_img {
 typedef struct s_map {
 	int		x;
 	int		y;
+	int		p_check;
 	t_img	tex[4];
 	int		floor;
 	int		ceiling;
@@ -116,8 +117,6 @@ typedef struct s_key {
 }	t_key;
 
 typedef struct s_data {
-	int		x;
-	int		y;
 	void	*mlx;
 	void	*win;
 	char	*name;
@@ -152,19 +151,20 @@ bool	validate_map(char **map, t_error *error);
 
 // CONFIG_PARSER
 
-bool	parse_config(const char *filename, t_error *error);
 bool	process_file(FILE *file, t_error *error);
 bool	process_buffer(const char *buffer, t_error *error);
 bool	is_path_or_config_line(const char *line);
 int		skip_to_next_line(const char *line);
-void	set_error(t_error *error, char *message, int code);
 bool	is_valid_character(char c);
+
+// PLAYER_PARSER
+
+bool	get_player_pos(t_data *data, char **map, t_error *error);
 
 // MAP_PARSER
 
-bool	parse_config_file(char *file_path, t_data *data, t_error *error);
+bool	parse_config(char *file_path, t_data *data, t_error *error);
 bool	process_line(char *line, t_data *data, t_error *error, int fd);
-void	set_error(t_error *error, char *message, int code);
 
 // MAP_UTILS
 
@@ -187,7 +187,7 @@ char	**fill_array_spaces(char **array);
 /***** UTILS *****/
 
 void	handle_error(int error_code, t_data *data);
-void	set_error(t_error *error, char *message, int code);
+bool	set_error(t_error *error, char *message, int code);
 char	*ft_strldup(char *str, int size);
 char	*trim_spaces(char *str);
 bool	is_valid_config_line(const char *line);
