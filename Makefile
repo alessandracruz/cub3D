@@ -22,12 +22,22 @@ LIBFT_DIR = $(LIB_DIR)/libft
 MLX_DIR = $(LIB_DIR)/minilibx-linux
 GNL_DIR = $(LIB_DIR)/get_next_line
 
-SRC = $(wildcard $(SRC_DIR)/*.c) \
-      $(wildcard $(SRC_DIR)/parser/*.c) \
-      $(wildcard $(SRC_DIR)/game/*.c) \
-	  $(wildcard $(SRC_DIR)/graphics/*.c) \
-	  $(wildcard $(SRC_DIR)/utils/*.c) \
-      $(wildcard $(GNL_DIR)/*.c)
+SRC =	$(SRC_DIR)/draw.c                   \
+		$(SRC_DIR)/key.c                    \
+		$(SRC_DIR)/load_map.c               \
+		$(SRC_DIR)/main.c                   \
+		$(SRC_DIR)/move.c                   \
+		$(SRC_DIR)/parser/color_parser.c    \
+		$(SRC_DIR)/parser/map_parser.c      \
+		$(SRC_DIR)/parser/map_validate.c    \
+		$(SRC_DIR)/parser/player_parser.c   \
+		$(SRC_DIR)/parser/texture_parser.c  \
+		$(SRC_DIR)/utils/array_utils.c      \
+		$(SRC_DIR)/utils/error_handling.c   \
+		$(SRC_DIR)/utils/string_utils.c     \
+		$(SRC_DIR)/utils/validation_utils.c \
+		$(GNL_DIR)/get_next_line.c          \
+		$(GNL_DIR)/get_next_line_utils.c
 	  
 OBJ = $(SRC:%.c=%.o)
 
