@@ -44,3 +44,8 @@ bool	is_map_line(const char *line)
 	}
 	return (true);
 }
+
+bool	is_valid_character(char c)
+{
+	return (ft_strchr(" 01NSEWO\n", c) != NULL);
+}

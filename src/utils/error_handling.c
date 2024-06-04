@@ -12,7 +12,6 @@
 
 #include "cub3d.h"
 
-// Trata erros registrando e realizando a limpeza
 void	handle_error(int error_code, t_data *data)
 {
 	if (error_code == ERR_MLX_INIT_FAILED)
@@ -27,7 +26,6 @@ void	handle_error(int error_code, t_data *data)
 	exit(error_code);
 }
 
-// Define os detalhes do erro na estrutura de erro fornecida
 bool	set_error(t_error *error, char *message, int code)
 {
 	error->message = message;

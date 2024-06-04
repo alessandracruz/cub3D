@@ -161,10 +161,6 @@ bool	validate_map(char **map, t_error *error);
 
 // CONFIG_PARSER
 
-bool	process_file(FILE *file, t_error *error);
-bool	process_buffer(const char *buffer, t_error *error);
-bool	is_path_or_config_line(const char *line);
-int		skip_to_next_line(const char *line);
 bool	is_valid_character(char c);
 
 // PLAYER_PARSER
@@ -174,14 +170,6 @@ bool	get_player_pos(t_data *data, char **map, t_error *error);
 // MAP_PARSER
 
 bool	parse_config(char *file_path, t_data *data, t_error *error);
-bool	process_line(char *line, t_data *data, t_error *error, int fd);
-
-// MAP_UTILS
-
-int		count_map_lines(int fd);
-void	free_map_grid(char ***grid, int line_count);
-bool	fill_map_grid(int fd, char ***grid, int line_count, t_error *error);
-bool	process_map_line(t_data *data, int fd, t_error *error);
 
 // TEXTURE_UTILS
 
@@ -204,11 +192,9 @@ bool	is_valid_config_line(const char *line);
 bool	is_valid_map_char(char c);
 bool	is_map_char(char c);
 bool	is_map_line(const char *line);
-void	log_message(const char *format, ...);
 
 // DRAW
 
-void	draw_background(t_data *data);
 void	draw_ver_line(t_data *data, t_lmap *lmap, t_line line);
 
 // LOAD_MAP
